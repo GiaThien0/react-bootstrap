@@ -2,6 +2,7 @@ import React from 'react'
 import { Container, Row, Col,Button } from 'react-bootstrap';
 import '../Hear/Hear.css'
 import SearchInput from '../SearchInput/SearchInput';
+import { Link } from 'react-router-dom';
 function Hear() {
   return (  
 <Container fluid className='green-background'>
@@ -14,15 +15,19 @@ function Hear() {
             <SearchInput/>
         </Col>
         <Col md={3}>
+        <Link to="/LoGin" style={{ textDecoration: 'none' }}>
             <Button variant="outline-light" className='Hear-2 me-4'>
                 <i className="bi bi-person-fill me-1"></i>
                 <span>Tài khoản</span>
             </Button>{' '}
-        
+            </Link>
+            <Link to="/cart" style={{ textDecoration: 'none' }}>
+
             <Button variant="outline-light "className='Hear-2 cart-icon' >
                 <i className="bi bi-bag "></i>
                 <span className="badge">1</span>
-            </Button>{' '}
+            </Button>{''}
+            </Link>
         </Col>
     </Row>
 </Container>
