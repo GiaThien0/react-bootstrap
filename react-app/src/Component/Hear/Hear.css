@@ -1,0 +1,39 @@
+.green-background{
+    background-color: #28a745;
+    color: white; /* Màu chữ */
+    font-size: 12px;
+        
+}
+.Hear-1{
+    padding-top: 1rem;
+    padding-bottom:20px ;
+    text-align:center;
+}
+.Hear-2{
+    
+    
+    padding-left: 10px;
+    border: 1px solid white; /* Đường viền */
+    
+}
+.Hear-2:hover{
+    background-color: rgba(173, 216, 230, 0.5); /* Màu xanh nhạt */
+    color:white; /* Màu chữ nếu cần */
+}
+
+
+.cart-icon {
+    position: relative; /* Đặt vị trí tương đối cho nút giỏ hàng */
+}
+
+.badge {
+    position: absolute; /* Đặt vị trí tuyệt đối cho số */
+    top: -10px !important; /* Điều chỉnh vị trí dọc lên trên (thử giá trị khác như -15px nếu cần) */
+    right: -0.2px; /* Điều chỉnh vị trí ngang (thử giá trị khác như -15px nếu cần) */
+    background-color: red; /* Màu nền cho số */
+    color: white; /* Màu chữ */
+    border-radius: 50%; /* Tạo hình tròn cho số */
+    padding: 2px 5px; /* Khoảng cách xung quanh số */
+    font-size: 12px; /* Kích thước chữ */
+    font-weight: bold; /* Làm đậm chữ */
+}
