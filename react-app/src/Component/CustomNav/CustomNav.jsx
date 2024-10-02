@@ -22,10 +22,10 @@ function CustomNav() {
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav"  >
         <Nav className="ms-auto ">
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/">sản phẩm</Nav.Link>
-          <Nav.Link as={Link} to="/">Liên hệ </Nav.Link> 
-          <Nav.Link as={Link} to="/">địa chỉ</Nav.Link>          
+          <Nav.Link as={Link} to="/">Trang chủ</Nav.Link>
+          <Nav.Link as={Link} to="/Products">sản phẩm</Nav.Link>
+          <Nav.Link as={Link} to="/Contact">Liên hệ </Nav.Link> 
+          <Nav.Link as={Link} to="/Address">địa chỉ</Nav.Link>          
         </Nav>
       </Navbar.Collapse>
     </Container>
