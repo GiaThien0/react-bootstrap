@@ -5,7 +5,7 @@ import SearchInput from '../SearchInput/SearchInput';
 import { Link } from 'react-router-dom';
 function Hear() {
   return (  
-<Container fluid className='green-background'>
+<Container fluid className='green-background' >
     <Row className="Hear-1">
         <Col md={3} className="text-center pt-2">
             <span><i className="bi bi-envelope">lenguyengiathien0@gmail.com </i></span>/
@@ -21,7 +21,7 @@ function Hear() {
                 <span>Tài khoản</span>
             </Button>{' '}
             </Link>
-            <Link to="/cart" style={{ textDecoration: 'none' }}>
+            <Link to="/Card" style={{ textDecoration: 'none' }}>
 
             <Button variant="outline-light "className='Hear-2 cart-icon' >
                 <i className="bi bi-bag "></i>

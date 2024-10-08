@@ -1,0 +1,52 @@
+.product-detail {
+    position: relative; /* Để cho các hình nhỏ nằm bên dưới */
+  }
+  
+  .thumbnail-images {
+    margin-top: 10px; /* Khoảng cách giữa hình chính và hình nhỏ */
+  }
+  
+  .thumbnail {
+    width: 10px; /* Mỗi hình nhỏ chiếm 22% chiều rộng */
+    max-width: 70px; /* Chiều rộng tối đa cho hình nhỏ */
+    height: auto; /* Tự động chiều cao */
+    cursor: pointer; /* Thay đổi con trỏ khi di chuột qua hình nhỏ */
+  }
+  .custom-button {
+    background-color: white; /* Màu nền ban đầu */
+    color: black; /* Màu chữ */
+    border:1px solid black; /* Bỏ viền */
+    transition: background-color 0.3s, transform 0.3s; /* Hiệu ứng chuyển tiếp */
+
+  }
+  
+  .custom-button:hover {
+    background-color: none; /* Màu nền khi hover */
+    transform: scale(1.05); /* Tăng kích thước khi hover */
+  }
+  .custom-buttonred {
+    background-color: red; /* Màu nền ban đầu */
+    color: white; /* Màu chữ */
+    border:1px solid red; 
+    transition: background-color 0.3s, transform 0.3s; /* Hiệu ứng chuyển tiếp */
+
+  }
+  
+  .custom-buttonred:hover {
+    background-color: red; /* Màu nền khi hover */
+    border:1px solid red; 
+    transform: scale(1.05); /* Tăng kích thước khi hover */
+  }
+  .custom-buttonblue {
+    background-color: white; /* Màu nền ban đầu */
+    color: blue; /* Màu chữ */
+    border:1px solid blue; 
+    transition: background-color 0.3s, transform 0.3s; /* Hiệu ứng chuyển tiếp */
+
+  }
+  
+  .custom-buttonblue:hover {
+    background-color: blue; /* Màu nền khi hover */
+    border:1px solid blue; 
+    transform: scale(1.05); /* Tăng kích thước khi hover */
+  }

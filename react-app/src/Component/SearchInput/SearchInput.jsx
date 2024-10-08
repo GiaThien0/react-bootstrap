@@ -7,7 +7,7 @@ function SearchInput() {
                 <InputGroup>
                     <Form.Control
                         type="text"
-                        placeholder="Search"
+                        placeholder="Tìm kiếm"
                         className="mr-sm-2"
                     />
                     <Button variant="success" type="submit" ><i class="bi bi-search"></i></Button>{' '}
