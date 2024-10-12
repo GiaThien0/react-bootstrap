@@ -1,5 +1,6 @@
 import React from 'react'
 import { Container,Carousel,Card, Button,Col,Row } from 'react-bootstrap';
+import hinh3 from '../assets/hinh3.jpg'
 function CustomCarouselcard() {
   return (
     <Container className='mt-5 '>
@@ -7,10 +8,11 @@ function CustomCarouselcard() {
      <Carousel >
       {/* Slide 1 */}
       <Carousel.Item>
+        
         <Row>
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3} />
               <Card.Body>
                 <Card.Title>Product 1</Card.Title>
                 <Card.Text>
@@ -23,7 +25,7 @@ function CustomCarouselcard() {
 
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 2</Card.Title>
                 <Card.Text>
@@ -36,7 +38,7 @@ function CustomCarouselcard() {
 
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 3</Card.Title>
                 <Card.Text>
@@ -48,7 +50,7 @@ function CustomCarouselcard() {
           </Col>
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3} />
               <Card.Body>
                 <Card.Title>Product 3</Card.Title>
                 <Card.Text>
@@ -66,7 +68,7 @@ function CustomCarouselcard() {
         <Row>
         <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 3</Card.Title>
                 <Card.Text>
@@ -78,7 +80,7 @@ function CustomCarouselcard() {
           </Col>
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 4</Card.Title>
                 <Card.Text>
@@ -91,7 +93,7 @@ function CustomCarouselcard() {
 
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 5</Card.Title>
                 <Card.Text>
@@ -104,7 +106,7 @@ function CustomCarouselcard() {
 
           <Col>
             <Card style={{ width: '18rem' }}>
-              <Card.Img variant="top" src="https://via.placeholder.com/150" />
+              <Card.Img variant="top" src={hinh3}  />
               <Card.Body>
                 <Card.Title>Product 6</Card.Title>
                 <Card.Text>

@@ -1,0 +1,11 @@
+.lista{
+    border: 1px solid white ;
+    padding-top: 0.5rem;
+    padding-bottom:0.5rem ;
+    background-color: white;
+}
+
+.lista:hover{
+    background-color: silver;
+    border: 1px solid silver;
+}
