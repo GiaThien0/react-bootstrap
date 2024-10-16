@@ -11,9 +11,7 @@ import CustomFooter from './Component/CustomFooter/CustomFooter';
 
 import Cardshoping from './layout/Home/theme/Cardshoping';
 import Productdetail from './layout/Home/theme/Productdetail';
-
-
-
+import ChechkoutPage from './layout/Home/theme/ChechkoutPage';
 
 function App() {
   return (
@@ -28,6 +26,7 @@ function App() {
       <Route path="/Address" element={<Address />} />
       <Route path="/Card" element={<Cardshoping />} />
       <Route path="/Producdetail" element={<Productdetail/>} />
+      <Route path="/Checkout" element={<ChechkoutPage/>} />
     </Routes>
     <CustomFooter/>
   </Router>
