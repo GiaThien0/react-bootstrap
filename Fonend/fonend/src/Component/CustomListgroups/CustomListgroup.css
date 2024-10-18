@@ -1,0 +1,16 @@
+.lista{
+    
+    border: white;
+    font-size: 20px;
+    border-bottom:1px solid silver ;
+    padding-top: 20px;
+}
+.lista2{
+     border: none;
+     text-decoration: none;
+     color: black;
+   
+}
+.lista2:hover{
+    color: red;
+}

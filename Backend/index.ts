@@ -1,56 +1,38 @@
-import express from 'express';
-
+import express, { Router } from 'express';
+import userRoute from './src/router/user'
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import userRouter from './src/router/user';
+import connectDB from './src/config/db'; 
+const cors = require('cors');
 
-
-// Tải biến môi trường từ file .env
 dotenv.config();
+
+
+
+import autheRouter from './src/router/user'
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const mongoUri = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.gzdllvq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-`;
+connectDB()
+
+app.use(cors({
+  origin: 'http://localhost:4000',
+  credentials: true
+}));
 
 
-app.use('/auth',userRouter)
+app.use(express.json());
+app.use('/api',userRoute)
 
-
-
-
-
-
-
-
-const connectDB = async ()=>{
-    try{
-        await mongoose.connect(mongoUri)
-        console.log(`connect to db succesfully!!`)
-        
-    }catch(error){
-        console.log(`Can not connect to db${error}`)
-    }
-};
-connectDB().then(()=>{
-   
-}).catch((error) =>{
-    console.log(error)
-
-})
-
-
-
+//router
+app.use("/v1/auth", autheRouter);
 
 
 // Middleware để xử lý dữ liệu JSON
-app.use(express.json());
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
   });
-// Định nghĩa một route cơ bản
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+  app.get('/', (req, res) => {
+    res.send('Hello World!')
+  })
 

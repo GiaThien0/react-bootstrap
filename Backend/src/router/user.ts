@@ -1,9 +1,11 @@
-import { Router } from "express";
-import { register } from "../controller/user";
+import express from 'express';
+import authController from '../controller/userController';
+import usermiddleware from '../middleware/usermiddleware';
 
-const router = Router()
+const router = express.Router();
 
-router.post('register', register)
-
+// Định nghĩa route cho đăng ký
+router.post("/register", authController.registerUser);
+router.post("/loginUser" , authController.loginUser,usermiddleware.authenticateToken);
 
 export default router;
