@@ -2,6 +2,8 @@ import express, { Router } from 'express';
 import userRoute from './src/router/user'
 import dotenv from 'dotenv';
 import connectDB from './src/config/db'; 
+import productsRoute from './src/router/products'
+import categoryRoute from './src/router/category'
 const cors = require('cors');
 
 dotenv.config();
@@ -16,7 +18,7 @@ const port = process.env.PORT || 5000;
 connectDB()
 
 app.use(cors({
-  origin: 'http://localhost:4000',
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 
@@ -26,7 +28,8 @@ app.use('/api',userRoute)
 
 //router
 app.use("/v1/auth", autheRouter);
-
+app.use("/v1/products",productsRoute );
+app.use("/v1/catergory",categoryRoute );
 
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {

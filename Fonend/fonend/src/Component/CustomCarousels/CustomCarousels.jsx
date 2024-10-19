@@ -17,10 +17,7 @@ function CustomCarousels() {
         alt="First slide"
         style={{ height: '500px',width:'20px', objectFit: 'cover' }}
       />
-      <Carousel.Caption>
-        <h3>Điện thoại thông minh</h3>
-        <p>sam sum galasi s100</p>
-      </Carousel.Caption>
+      
     </Carousel.Item>
     <Carousel.Item>
       <img

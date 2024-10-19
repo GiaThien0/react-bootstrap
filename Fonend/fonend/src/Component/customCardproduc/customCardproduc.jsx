@@ -1,36 +1,64 @@
-import React from 'react'
-import { Card } from 'react-bootstrap';
-import image3 from '../assets/hinh3.jpg';
+import React, { useEffect, useState } from 'react'
+import { Card,  Col, Container, Row } from 'react-bootstrap';
+
 import { Link } from 'react-router-dom';
-import './customCardproduc.css'
-function customCardproduc() {
+import '../CustomCardproduc/CustomCardproduc.css'
+import axiosInstance from '../../utils/aiosConfig'
+
+
+
+function CustomCardproduc() {
+
+
+
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const fetchProducts = async () => {
+          try {
+              const response = await axiosInstance.get('products/getproducts'); // Gọi API sử dụng axiosInstance
+              setProducts(response.data);
+          } catch (err) {
+              setError(err.message);
+          } finally {
+              setLoading(false);
+          }
+      };
+
+      fetchProducts();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
-    <Link to="/your-link" className="card-hover ">
 
-    <Card className=''>
+    <Container >
+     <Row>
+    {products.map((product) => (
+      <Col md={3} key={product._id} className="d-flex mb-5">
+      <Link to={`/Productdetail/${product._id}`} className="card-hover w-100">
 
-    
-        <Card.Img  variant="top" src={image3}/>
-
-      <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text>
-        <Card.Text style={{color:"red"}}>
-            Giá bán  :<span>1000đ</span>
-        </Card.Text>
-        <div className='d-flex'> 
-        
-
-       
-        </div>
-      </Card.Body>
-    </Card>
-    </Link>
-
+              <Card className="product-card d-flex flex-column h-100">
+            <Card.Img variant="top" src={product.image} />
+            <Card.Body className="d-flex flex-column">
+              <Card.Title>{product.name}</Card.Title>
+              <Card.Text>{product.description}</Card.Text>
+              <Card.Text style={{ color: "red" }}>
+                Giá bán: <span>{product.price.toLocaleString('vi-VN')} đ</span>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        </Link>
+      </Col>
+    ))}
+  </Row>
+</Container>    
+   
+   
   )
 }
 
-export default customCardproduc
+export default CustomCardproduc

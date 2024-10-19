@@ -19,9 +19,13 @@ const ProductSchema = new Schema({
         default: 0, // Mặc định là 0
     },
     category: {
-        type: Schema.Types.ObjectId, // Liên kết với Category
-        ref: 'Category', // Tham chiếu đến model Category
+        type: Schema.Types.ObjectId,// Liên kết với Category
+        ref: 'CategoryModel', // Tham chiếu đến model Category
         required: true,
+    },
+    image: {
+        type: String, // Có thể là đường dẫn URL hoặc đường dẫn tương đối đến ảnh
+        required: true, // Bắt buộc nhập ảnh
     },
     createdAt: {
         type: Date,

@@ -1,4 +1,4 @@
-import axiosInstance from '../../../utils/axiosConfig';
+import axiosInstance from '../../../../src/utils/aiosConfig';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import logo from '../../../Component/assets/logo.webp';
 import { Link, useNavigate } from 'react-router-dom';

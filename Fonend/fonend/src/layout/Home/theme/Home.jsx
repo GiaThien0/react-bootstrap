@@ -20,9 +20,9 @@ function Home() {
       </Col>
       
     </Row>
-    <div className=''>
+ 
     <CustomProduc ></CustomProduc>
-    </div>
+   
     <CustomCarouselcard/>
 
     </Container>

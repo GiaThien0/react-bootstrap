@@ -29,12 +29,12 @@ function App() {
       <Route path="/Contact" element={<Contact />} />
       <Route path="/Address" element={<Address />} />
       <Route path="/Card" element={<Cardshoping />} />
-      <Route path="/Producdetail" element={<Productdetail/>} />
+      <Route path="/Productdetail/:id" element={<Productdetail />} />
       <Route path="/Checkout" element={<ChechkoutPage/>} />
       <Route path="/login" element={<Login/>} />
       <Route path="/Register" element={<Register/>} />
       <Route path="/dashboard" element={<Dashboard/>} />
-      <Route path="/productdetail/:id" element={<Productdetail/>} />
+     
 
     </Routes>
     <CustomFooter/>
