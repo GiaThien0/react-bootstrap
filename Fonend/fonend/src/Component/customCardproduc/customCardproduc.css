@@ -1,9 +1,19 @@
 .card-hover {
     transition: box-shadow 0.3s ease;
-    text-decoration: none; /* Loại bỏ gạch chân */
+   
     color: inherit;
 }
 
 .card-hover:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+}
+.Card-Link{
+    text-decoration: none;
+}
+.carousel-item-padding-40-px {
+    padding: 10px; /* Tăng khoảng cách giữa các sản phẩm */
+}
+
+.product-card {
+    margin: 0 auto; /* Căn giữa sản phẩm trong carousel */
 }

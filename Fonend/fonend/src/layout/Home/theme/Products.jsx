@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Col, Container, Offcanvas, Row } from 'react-bootstrap'
 import CustomListgroups from '../../../Component/CustomListgroups/CustomListgroups'
 import CustomProduc from '../../../Component/CustomProduc/CustomProduc'
+import CustomCarouselcard from '../../../Component/CustomCarouselcard/CustomCarouselcard';
 
 
 
@@ -13,7 +14,7 @@ function Products() {
   return (
     <Container className='mt-5 mb-5'>
       <Row>
-        <Col md={2} className=''>
+        <Col md={1} className=''>
         <Button variant="primary" onClick={handleShow}>
         <i class="bi bi-list"></i>
 
@@ -30,8 +31,8 @@ function Products() {
        
           
         </Col>
-        <Col md={10}   className='border-start'>
-        <CustomProduc></CustomProduc>
+        <Col md={11}   className='border-start'>
+        <CustomCarouselcard></CustomCarouselcard>
          
         </Col>
 

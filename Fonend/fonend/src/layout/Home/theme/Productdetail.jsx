@@ -53,8 +53,8 @@ function Productdetail() {
             <p style={{ color: 'Silver' }}>đã bán {product.sold}</p> 
           </span>
             <Card.Text>{product.description}</Card.Text>
-          <h2 style={{ backgroundColor: '#EEEEEE' }} className='mt-2'>
-            <span className="fw-bold underline">{product.price.toLocaleString('vi-VN')} đ</span> 
+          <h2 style={{ backgroundColor: '#EEEEEE',color:'red' }} className='mt-2'>
+            <span  className="fw-bold underline">{product.price.toLocaleString('vi-VN')} đ</span> 
           </h2>
           <div className='d-flex gap-3'>
             <p className=''>Giao đến <span className="fw-bold">q1 , P,Bến Nghé, Hồ Chí Minh </span></p>

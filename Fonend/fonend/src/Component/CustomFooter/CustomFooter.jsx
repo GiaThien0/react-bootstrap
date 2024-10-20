@@ -9,7 +9,7 @@ function CustomFooter() {
    <Container>
     <Row className='mt-5 '>
         <Col md={3} >
-            <h4 >
+            <h4 style={{color:'red'}}>
             1. Lazo Nguyễn Trãi
             </h4>
             <ul className='pt-4'>
@@ -21,7 +21,7 @@ function CustomFooter() {
             </ul>
         </Col>
         <Col md={3} >
-            <h4 >
+            <h4 style={{color:'red'}}>
             2. Lazo Ninh Bình
             </h4>
             <ul className='pt-4'>
@@ -33,7 +33,7 @@ function CustomFooter() {
             </ul>
         </Col>
         <Col md={3} >
-            <h4 >
+            <h4 style={{color:'red'}}>
             3. Lazo Nguyễn Trãi
             </h4>
             <ul className='pt-4'>
@@ -45,7 +45,7 @@ function CustomFooter() {
             </ul>
         </Col>
         <Col md={3} >
-        <h4 >
+        <h4 style={{color:'red'}}>
         Tư vấn bán hàng
             </h4>
 

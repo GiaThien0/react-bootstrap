@@ -2,13 +2,14 @@ import React from 'react'
 import CustomCardproduc from '../CustomCardproduc/CustomCardproduc'
 
 import '../CustomProduc/CustomProduc.css'
+import { Button } from 'react-bootstrap'
 function CustomProduc() {
   return (
 
 
-    <div>
-  <h1 className='text-center  mt-5 pt-5 pb-5' >Sản phẩm </h1>
-    
+    <div className='bg mt-5'>
+          
+            <Button className=' mt-2' style={{marginLeft:'20px'}} variant='danger'>2 NGÀY DEAL SỐC : GIẢM THÊM ĐẾN 500K</Button>
        
             <CustomCardproduc></CustomCardproduc>
 

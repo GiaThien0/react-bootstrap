@@ -22,9 +22,9 @@ function Home() {
     </Row>
  
     <CustomProduc ></CustomProduc>
-   
+      <div className='mt-5'>
     <CustomCarouselcard/>
-
+    </div>
     </Container>
   )
 }
