@@ -15,13 +15,15 @@ const Login = () => {
         e.preventDefault();
         setErrorMessage('');
         setIsLoading(true);
-
+    
         try {
-            const response = await axiosInstance.post('/loginUser', loginData);
+            const response = await axiosInstance.post('/auth/loginUser', loginData);
             console.log('Phản hồi từ server:', response);
-
+    
             if (response.status === 200) {
-                navigate('/dashboard');
+                const username = response.data.user.name; // Kiểm tra xem có đúng không
+                localStorage.setItem('username', username); // Lưu vào localStorage
+                navigate('/'); // Chuyển hướng về trang chính
             }
         } catch (error) {
             console.error('Lỗi đăng nhập:', error);

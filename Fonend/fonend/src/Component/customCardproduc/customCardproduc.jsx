@@ -54,6 +54,7 @@ function CustomCardproduc() {
       itemClass="carousel-item-padding-40-px"
       style={{with:'25px'}}
     >
+      
       {products.map((product) => (
         <div key={product._id} className="mb-5 ">
           <Link to={`/Productdetail/${product._id}`} className="Card-Link">

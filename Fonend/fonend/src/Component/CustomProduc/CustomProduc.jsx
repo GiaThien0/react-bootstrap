@@ -1,8 +1,9 @@
 import React from 'react'
-import CustomCardproduc from '../CustomCardproduc/CustomCardproduc'
+
 
 import '../CustomProduc/CustomProduc.css'
 import { Button } from 'react-bootstrap'
+import CustomCardproduc from '../CustomCardproduc/CustomCardproduc'
 function CustomProduc() {
   return (
 
@@ -11,7 +12,7 @@ function CustomProduc() {
           
             <Button className=' mt-2' style={{marginLeft:'20px'}} variant='danger'>2 NGÀY DEAL SỐC : GIẢM THÊM ĐẾN 500K</Button>
        
-            <CustomCardproduc></CustomCardproduc>
+           <CustomCardproduc></CustomCardproduc>
 
               
     </div>

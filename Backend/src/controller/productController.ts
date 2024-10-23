@@ -15,6 +15,7 @@ const productController = {
         } catch (error) {
             res.status(500).json({ message: "Error fetching product", error });
         }
+        
     },
 getProducts : async (req:any, res:any) => {
     try {
@@ -52,6 +53,8 @@ addProduct: async (req: any, res: any) => {
     } catch (error) {
         res.status(500).json({ message: "Error adding product", error });
     }
-}
+},
+  
+
 }
 export default productController; 

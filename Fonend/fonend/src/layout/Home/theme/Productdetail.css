@@ -13,16 +13,17 @@
     cursor: pointer; /* Thay đổi con trỏ khi di chuột qua hình nhỏ */
   }
   .custom-button {
-    background-color: white; /* Màu nền ban đầu */
+    background-color: #EEEEEE; /* Màu nền ban đầu */
     color: black; /* Màu chữ */
-    border:1px solid black; /* Bỏ viền */
+    border:1px solid #EEEEEE; /* Bỏ viền */
     transition: background-color 0.3s, transform 0.3s; /* Hiệu ứng chuyển tiếp */
-
+    
   }
   
   .custom-button:hover {
-    background-color: none; /* Màu nền khi hover */
-    transform: scale(1.05); /* Tăng kích thước khi hover */
+    background-color: #EEEEEE; /* Màu nền khi hover */
+    color: black;
+    border: 1px solid #EEEEEE;
   }
   .custom-buttonred {
     background-color: red; /* Màu nền ban đầu */
@@ -58,4 +59,6 @@
 
 .card-hover:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+    
 }
+

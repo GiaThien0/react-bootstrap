@@ -29,7 +29,7 @@ app.use('/api',userRoute)
 //router
 app.use("/v1/auth", autheRouter);
 app.use("/v1/products",productsRoute );
-app.use("/v1/catergory",categoryRoute );
+app.use("/v1/category",categoryRoute);
 
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {

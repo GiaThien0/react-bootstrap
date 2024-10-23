@@ -53,21 +53,22 @@ function Productdetail() {
             <p style={{ color: 'Silver' }}>đã bán {product.sold}</p> 
           </span>
             <Card.Text>{product.description}</Card.Text>
-          <h2 style={{ backgroundColor: '#EEEEEE',color:'red' }} className='mt-2'>
+          <h2 style={{color:'red' }} className='mt-2'>
             <span  className="fw-bold underline">{product.price.toLocaleString('vi-VN')} đ</span> 
           </h2>
           <div className='d-flex gap-3'>
             <p className=''>Giao đến <span className="fw-bold">q1 , P,Bến Nghé, Hồ Chí Minh </span></p>
-            <a href="http://webcoban.vn">Giao đến</a>
+            <a href="/">Giao đến</a>
           </div>
           <hr />
           <p>Số lượng</p>
-          <div className='d-flex text-center gap-4' style={{ backgroundColor: '#EEEEEE' }}>
-            <Button className='custom-button' onClick={increaseQuantity}>+</Button>
-            <p className=''>{quantity}</p>
+          <div className='d-flex gap-2 justify-content-center' style={{ backgroundColor: '#EEEEEE' }}>
+            <Button className='custom-button ' onClick={increaseQuantity}>+</Button>
+            <p >{quantity}</p>
             <Button className='custom-button' onClick={decreaseQuantity}>-</Button>
           </div>
           <hr />
+        
           <div className='d-flex gap-5'>
             <Button className='w-50 custom-buttonred'>Chọn mua</Button>
             <Button className='w-50 custom-buttonblue'>Mua trả sau</Button>

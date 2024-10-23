@@ -2,7 +2,6 @@ import User from '../models/userModel';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import { Request, Response } from 'express';
 
 dotenv.config();
 const authController = {
@@ -67,8 +66,9 @@ const authController = {
             return res.status(500).json({ message: "JWT secret key is not defined" });
         }
 
+        
         // Tạo token
-        const token = jwt.sign(  
+        const token = jwt.sign( 
             {  
                 id: user._id,  
                 admin: user.admin,  
@@ -101,8 +101,15 @@ const authController = {
             res.status(500).json({ message: "Internal Server Error", error: err });
         }
     },
+    getuser : async (req:any, res:any) => {
+        try {
+            const products = await User.find();
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ message: "Error fetching products", error });
+        }
 
-
-};
+}
+}
 
 export default authController; // Xuất mặc định
