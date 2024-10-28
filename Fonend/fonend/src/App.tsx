@@ -18,6 +18,8 @@ import Dashboard from './layout/adm/Dashboard';
 import Register from './layout/Home/theme/register';
 
 const App: React.FC = () => {
+    const userId = localStorage.getItem('userId');
+
     return (
         <Router>
             <Hear />
@@ -27,7 +29,7 @@ const App: React.FC = () => {
                 <Route path="/Products" element={<Products />} /> {/* Cập nhật đường dẫn */}
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/Address" element={<Address />} />
-                <Route path="/Card" element={<Cardshoping />} />
+                <Route path="/Card" element={<Cardshoping userId={userId} />} />
                 <Route path="/Productdetail/:id" element={<Productdetail />} />
                 <Route path="/Checkout" element={<ChechkoutPage />} />
                 <Route path="/login" element={<Login />} />

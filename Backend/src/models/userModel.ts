@@ -28,10 +28,7 @@ const UserSchema = new Schema({
         enum: ['user', 'admin'], // Các vai trò có thể có
         default: 'user' // Mặc định là 'user'
     },
-    admin: {
-        type: Boolean,
-        default: false,
-    }
+    
 }, {
     timestamps: true  // Tự động thêm `createdAt` và `updatedAt`
 });

@@ -4,11 +4,12 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 const authController = {
-    registerUser: async (req: any, res: any) => {
+    registerUser: async (req :any, res :any) => {
         try {
             // Kiểm tra dữ liệu đầu vào
-            if (!req.body.name || !req.body.email ||  !req.body.password ) {
+            if (!req.body.name || !req.body.email || !req.body.password || !req.body.role) {
                 return res.status(400).json({ message: "Missing required fields" });
             }
 
@@ -17,7 +18,6 @@ const authController = {
             if (existingUser) {
                 return res.status(400).json({ message: "Email already exists" });
             }
-            
 
             // Mã hóa mật khẩu
             const salt = await bcrypt.genSalt(10);
@@ -40,9 +40,8 @@ const authController = {
         }
     },
 
-    loginUser: async (req: any, res: any) => {
+    loginUser: async (req :any, res :any) => {
         try {
-            // Kiểm tra dữ liệu đầu vào
             if (!req.body.email || !req.body.password) {
                 return res.status(400).json({ message: "Missing required fields" });
             }
@@ -58,58 +57,147 @@ const authController = {
             if (!isMatch) {
                 return res.status(400).json({ message: "Invalid email or password" });
             }
-           
-        const tokenSecret = process.env.jwt_ac;
 
-        // Kiểm tra nếu tokenSecret không được định nghĩa
-        if (!tokenSecret) {
-            return res.status(500).json({ message: "JWT secret key is not defined" });
-        }
+            const tokenSecret = process.env.jwt_ac;
+            if (!tokenSecret) {
+                return res.status(500).json({ message: "JWT secret key is not defined" });
+            }
 
-        
-        // Tạo token
-        const token = jwt.sign( 
-            {  
-                id: user._id,  
-                admin: user.admin,  
-                name: user.name  
-            },  
-            tokenSecret!, // thêm ! để chắc chắn tokenSecret đã được gán giá trị  
-            { expiresIn: "1h" }  
-        );  
+            // Tạo token
+            const token = jwt.sign(
+                { id: user._id, role: user.role, name: user.name },
+                tokenSecret,
+                { expiresIn: "1h" }
+            );
 
-        // Thiết lập cookie với token  
-        res.cookie('cookie', token, {  
-            httpOnly: true,  
-            secure: process.env.NODE_ENV === 'production',  
-            maxAge: 3600000  
-        });  
+            // Thiết lập cookie với token
+            res.cookie('token', token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                maxAge: 3600000
+            });
 
-        res.status(200).json({  
-            message: "Login successful",  
-            user: { id: user._id, name: user.name, email: user.email }, 
-         
-            // Loại bỏ việc gửi token trong body response:  
-            // token: token,  
-        });  
-
-                
-          
+            res.status(200).json({
+                message: "Login successful",
+                user: { id: user._id, name: user.name,role: user.role  },
+            });
 
         } catch (err) {
-            console.error(err);  // Ghi log lỗi
+            console.error(err);
             res.status(500).json({ message: "Internal Server Error", error: err });
         }
     },
-    getuser : async (req:any, res:any) => {
+
+   
+    logoutUser: async (req :any, res:any) => {
         try {
-            const products = await User.find();
-            res.status(200).json(products);
+            // Xóa cookie ở server nếu cần
+            res.clearCookie('token'); // Đảm bảo cookie token được xóa
+            
+            // Trả về phản hồi thành công
+            res.status(200).json({ message: "Logout successful" });
         } catch (error) {
-            res.status(500).json({ message: "Error fetching products", error });
+            console.error(error);
+            res.status(500).json({ message: "Internal Server Error", error });
+        }
+    },
+    addUser: async (req:any, res :any) => {
+        try {
+            // Xác thực xem người dùng hiện tại có vai trò là admin không
+            // if (req.user.role !== 'admin') {
+            //     return res.status(403).json({ message: "Forbidden: You don't have permission to add users" });
+            // }
+
+            // Kiểm tra dữ liệu đầu vào
+            const { name, email, password, role } = req.body;
+            if (!name || !email || !password || !role) {
+                return res.status(400).json({ message: "Missing required fields" });
+            }
+
+            // Kiểm tra xem email đã tồn tại chưa
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ message: "Email already exists" });
+            }
+
+            // Mã hóa mật khẩu
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            // Tạo người dùng mới với vai trò được cung cấp
+            const newUser = new User({
+                name,
+                email,
+                password: hashedPassword,
+                role: role === 'admin' ? 'admin' : 'user', // Chỉ chấp nhận 'admin' hoặc 'user'
+            });
+
+            // Lưu người dùng vào cơ sở dữ liệu
+            const user = await newUser.save();
+            res.status(201).json({ message: "User added successfully", user });
+
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Internal Server Error", error: err });
+        }
+    },
+    readusers : async (req:any, res :any) => {
+        try {
+            const users = await User.find({});
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({ message: 'Lỗi khi đọc người dùng', error });
         }
 
-}
-}
+    },
+    deleteuser : async (req:any, res :any) => {
+        const { id } = req.params;
 
-export default authController; // Xuất mặc định
+        try {
+            const deletedUser = await User.findByIdAndDelete(id);
+            if (!deletedUser) {
+                return res.status(404).json({ message: 'Người dùng không tìm thấy' });
+            }
+            res.status(200).json({ message: 'Người dùng đã được xóa', user: deletedUser });
+        } catch (error) {
+            res.status(500).json({ message: 'Lỗi khi xóa người dùng', error });
+        }
+    },
+    updateUser: async (req: any, res: any) => {
+        const { id } = req.params;
+        const { name, email, password, role } = req.body;
+    
+        const updateData: any = {}; // Tạo một đối tượng rỗng để chứa dữ liệu cập nhật
+    
+        // Chỉ thêm các trường cần thiết vào đối tượng cập nhật
+        if (name) updateData.name = name;
+        if (email) updateData.email = email;
+        if (password) {
+            // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
+            const hashedPassword = await bcrypt.hash(password, 10); // Sử dụng bcrypt để mã hóa mật khẩu
+            updateData.password = hashedPassword;
+        }
+        if (role) updateData.role = role;
+    
+        try {
+            const updatedUser = await User.findByIdAndUpdate(
+                id,
+                updateData,
+                { new: true }
+            );
+            
+            if (!updatedUser) {
+                return res.status(404).json({ message: 'Người dùng không tìm thấy' });
+            }
+            res.status(200).json({ message: 'Người dùng đã được cập nhật', user: updatedUser });
+        } catch (error) {
+            res.status(400).json({ message: 'Lỗi khi cập nhật người dùng', error });
+        }
+    }
+
+
+
+};
+
+
+export default authController;

@@ -20,7 +20,7 @@ const ProductSchema = new Schema({
     },
     category: {
         type: Schema.Types.ObjectId,// Liên kết với Category
-        ref: 'CategoryModel', // Tham chiếu đến model Category
+        ref: 'Category', // Tham chiếu đến model Category
         required: true,
     },
     image: {

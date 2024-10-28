@@ -2,27 +2,29 @@ import React from 'react';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import '../Hear/Hear.css';
 import SearchInput from '../SearchInput/SearchInput';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Cookies from 'js-cookie'; // Import thư viện js-cookie
 
 
 function Hear() {
     const username = localStorage.getItem('username'); // Lấy tên người dùng từ localStorage
-    const navigate = useNavigate(); // Khởi tạo useNavigate
+    console.log(document.cookie);
 
 
     const handleLogout = () => {
         // Xoá username khỏi localStorage
         localStorage.removeItem('username');
-        
+         localStorage.removeItem('userId'); // Xóa UserId nếu đã lưu
         // Xoá cookie
-        Cookies.remove('yourCookieName'); // Thay 'yourCookieName' bằng tên cookie của bạn
+        Cookies.remove('token'); // Thay 'yourCookieName' bằng tên cookie của bạn
         
         // Điều hướng về trang đăng nhập
-        navigate('/'); 
-    };
+        window.location.href = '/';
+        
 
+    };
+    
     return (  
         <Container fluid className='green-background'>
             <Row className="Hear-1"> 
@@ -64,6 +66,7 @@ function Hear() {
                                 <i className="bi bi-person-fill me-1"></i>
                                 <span>Tài khoản</span>
                             </Button>
+                           
                         </Link>
                     )}
                    

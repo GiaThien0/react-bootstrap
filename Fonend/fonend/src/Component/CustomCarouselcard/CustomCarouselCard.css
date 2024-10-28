@@ -1,0 +1,9 @@
+.card-hover {
+    transition: box-shadow 0.3s ease;
+    text-decoration: none; /* Loại bỏ gạch chân */
+    color: inherit;
+}
+
+.card-hover:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+}

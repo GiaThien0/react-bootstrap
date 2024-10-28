@@ -1,0 +1,36 @@
+/* styles.css */
+.sidebar {
+    width: 250px; /* Chiều rộng sidebar */
+    background-color: #f4f4f4; /* Màu nền */
+    height: 100vh; /* Chiều cao đầy đủ */
+    transition: width 0.3s; /* Hiệu ứng chuyển tiếp khi mở/đóng */
+  }
+  
+  .sidebar.collapsed {
+    width: 80px; /* Chiều rộng khi thu gọn */
+  }
+  
+  .menu-item {
+    padding: 15px; /* Khoảng cách cho item menu */
+    cursor: pointer; /* Con trỏ khi hover */
+  }
+  
+  .menu-item:hover {
+    background-color: #ddd; /* Hiệu ứng hover */
+  }
+  .sidebar-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Chiếm toàn bộ chiều cao */
+    width: 250px; /* Đặt chiều rộng cụ thể */
+    position: fixed; /* Cố định sidebar */
+    left: 0;
+    top: 0;
+    background-color: #fff;
+  }
+  
+  .content-container {
+    margin-left: 250px; /* Dịch nội dung bên phải dựa trên chiều rộng của sidebar */
+    width: calc(100% - 250px); /* Chiếm toàn bộ không gian còn lại */
+    padding: 20px; /* Khoảng cách padding cho nội dung */
+  }

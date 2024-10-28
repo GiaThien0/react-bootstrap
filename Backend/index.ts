@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './src/config/db'; 
 import productsRoute from './src/router/products'
 import categoryRoute from './src/router/category'
+import cart from './src/router/cart'
 const cors = require('cors');
 
 dotenv.config();
@@ -30,7 +31,7 @@ app.use('/api',userRoute)
 app.use("/v1/auth", autheRouter);
 app.use("/v1/products",productsRoute );
 app.use("/v1/category",categoryRoute);
-
+app.use("/v1/cart",cart);
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

@@ -13,7 +13,7 @@ const CustomCarouselcard = ({ selectedCategory }) => {
             setLoading(true); // Đặt loading về true trước khi gọi API
             try {
                 const endpoint = selectedCategory 
-                    ? `/category/category/${selectedCategory}`:'products/getproducts'; // Đường dẫn để lấy tất cả sản phẩm
+                    ? `/category/category/${selectedCategory}`:'products/getproducts'; 
                 const response = await axiosInstance.get(endpoint);
                 setProducts(response.data);
             } catch (err) {

@@ -1,7 +1,7 @@
 import axiosInstance from '../../../../src/utils/aiosConfig';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import logo from '../../../Component/assets/logo.webp';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Socialogin from '../../../Component/Socialogin';
 import { useState } from 'react';
 
@@ -9,7 +9,6 @@ const Login = () => {
     const [loginData, setLoginData] = useState({ email: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -18,13 +17,24 @@ const Login = () => {
     
         try {
             const response = await axiosInstance.post('/auth/loginUser', loginData);
-            console.log('Phản hồi từ server:', response);
     
             if (response.status === 200) {
-                const username = response.data.user.name; // Kiểm tra xem có đúng không
-                localStorage.setItem('username', username); // Lưu vào localStorage
-                navigate('/'); // Chuyển hướng về trang chính
+                localStorage.setItem('username', response.data.user.name); // Lưu vào localStorage
+                localStorage.setItem('userId', response.data.user.id);
+                localStorage.setItem('role', response.data.user.role);
+                const role = localStorage.getItem('role');
+
+
+                if (role === 'admin') {
+                    window.location.href = '/dashboard'; // Chuyển đến trang quản lý admin
+                } else {
+                    window.location.href = '/'; // Chuyển đến trang quản lý admin
+
+                }
             }
+              
+                
+            
         } catch (error) {
             console.error('Lỗi đăng nhập:', error);
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';
