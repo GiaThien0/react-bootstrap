@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, InputGroup, Row, Table } from 'react-bootstrap';
 import axiosInstance from '../utils/aiosConfig';
-import MyVerticallyCenteredModal from '../compoment/MyVerticallyCenteredModal';
+import Moddal from '../compoment/Moddal';
 
 function Home() {
   const [validated, setValidated] = useState(false);
@@ -11,7 +11,8 @@ function Home() {
   const [role, setRole] = useState('user');
   const [users, setUsers] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [modalShow, setModalShow] = useState(false);
+  const [modalShow, setModalShow] = React.useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     fetchUsers();
@@ -124,26 +125,28 @@ const handleDelete = async (id) => {
               </Form.Group>
               
             </Row>
-              <Row className='mb-3'>
-              <Form.Group controlId="roleSelect" >
+            <Row className='mb-3'>
+              <Form.Group controlId="roleSelect">
                 <Form.Label>Chọn vai trò</Form.Label>
                 <Form.Select
                   aria-label="Select Role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)} // Cập nhật role
-                >
-                  <option value="adm">Admin</option>
+                  value={role} // Đảm bảo rằng giá trị này phản ánh state
+                  onChange={(e) => {
+                    setRole(e.target.value);
+                    ; // In ra giá trị đã chọn
+                  }}                >
+                  <option value="admin">Admin</option>
                   <option value="user">User</option>
                 </Form.Select>
               </Form.Group>
-              </Row>
-            <Button type="submit">Gửi biểu mẫu</Button>
+            </Row>
+            <Button type="submit" >Gửi biểu mẫu</Button>
           </Form>
           {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>} {/* Hiển thị thông báo lỗi */}
 
         </Col>
         <Col md={8}>
-        <div>
+      
             <h1>Danh Sách Người Dùng</h1>
             <Table striped bordered hover className='text-center'>
                 <thead>
@@ -164,21 +167,26 @@ const handleDelete = async (id) => {
                             <td>{user.email}</td>
                             <td>{user.role}</td>
                             <td>
-                                <Button variant="primary" onClick={() => setModalShow(true)}>sửa
-
-                                </Button>
+                            <Button variant="primary" onClick={() => {
+                                               setCurrentUser(user); 
+                                               setModalShow(true);    
+                                              }}>sửa</Button>
                                 <Button variant="danger" onClick={()=> handleDelete(user._id)}>Xóa</Button>
                             </td>
                         </tr>
                                  ))}
-
+                      <Moddal
+  show={modalShow}
+  onHide={() => setModalShow(false)}
+  user={currentUser} // Truyền user hiện tại vào modal
+  fetchUsers={fetchUsers}
+/>
                 </tbody>
             </Table>
-        </div>
+      
         </Col>
       </Row>
-      <MyVerticallyCenteredModal show={modalShow} onHide={() => setModalShow(false)} />
-
+                  
     </Container>
   );
 }

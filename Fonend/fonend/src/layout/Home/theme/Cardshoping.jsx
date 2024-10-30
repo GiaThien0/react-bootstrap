@@ -136,7 +136,7 @@ function Cardshoping({ userId }) {
                     <td className='text-center p-5'>{product.name}</td>
                     <td className='text-center p-5'>{item.quantity}</td>
                     <td className='text-center p-5'>
-                        <Button type="button" onClick={(e) => increaseQuantity(e, product._id)}>+</Button>
+                        <Button type="button" onClick={(e) => increaseQuantity(e, item._id)}>+</Button>
                     </td>
                     <td className='text-center p-5'>
                         <Button type="button" onClick={() => decreaseQuantity(product._id)}>-</Button>

@@ -6,7 +6,6 @@ import productsRoute from './src/router/products'
 import categoryRoute from './src/router/category'
 import cart from './src/router/cart'
 const cors = require('cors');
-
 dotenv.config();
 
 
@@ -26,6 +25,8 @@ app.use(cors({
 
 app.use(express.json());
 app.use('/api',userRoute)
+
+app.use('/uploads', express.static('uploads'));
 
 //router
 app.use("/v1/auth", autheRouter);

@@ -17,14 +17,15 @@ const productController = {
         }
         
     },
-getProducts : async (req:any, res:any) => {
-    try {
-        const products = await ProductModel.find();
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching products", error });
-    }
-},
+    getProducts: async (req: any, res: any) => {
+        try {
+            // Sử dụng populate để lấy tên category cùng với sản phẩm
+            const products = await ProductModel.find().populate('category', 'name');
+            res.status(200).json(products);
+        } catch (error) {
+            res.status(500).json({ message: "Error fetching products", error });
+        }
+    },
 addProduct: async (req: any, res: any) => {
     try {
         const { name, description, price, image, categoryName } = req.body;
@@ -54,7 +55,30 @@ addProduct: async (req: any, res: any) => {
         res.status(500).json({ message: "Error adding product", error });
     }
 },
-  
+  adddprouctadm :async (req:any,res:any) =>{
+    try {
+        // Truy cập file đã được tải lên qua req.file
+        const filePath = req.file?.path.replace(/\\/g, '/');
+
+        // Tạo sản phẩm mới
+        const product = new ProductModel({
+            name: req.body.name,
+            price: req.body.price,
+            description: req.body.description,
+            image: filePath, // Đường dẫn tới file hình ảnh
+            category: req.body.category, // Nếu bạn có trường category trong form
+        });
+            
+        // Lưu sản phẩm vào MongoDB
+        await product.save();
+        const baseUrl = 'http://localhost:4000/'; // Địa chỉ của server
+        const imageUrl = `${baseUrl}${filePath}`; // Tạo URL hoàn chỉnh
+        res.status(200).json({ message: 'File uploaded successfully!', product });
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        res.status(500).json({ error: 'Failed to upload file.' });
+    }
+  }
 
 }
 export default productController; 
