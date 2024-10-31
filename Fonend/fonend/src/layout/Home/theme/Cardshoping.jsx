@@ -131,7 +131,7 @@ function Cardshoping({ userId }) {
             return (
                 <tr key={product._id}>
                     <td className='text-center' style={{ width: '20rem' }}>
-                        <Image src={product.image} fluid style={{ width: '50%' }} />
+                        <Image src={`http://localhost:4000/${product.image}`} fluid style={{ width: '50%' }} />
                     </td>
                     <td className='text-center p-5'>{product.name}</td>
                     <td className='text-center p-5'>{item.quantity}</td>

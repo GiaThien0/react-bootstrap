@@ -59,7 +59,7 @@ function CustomCardproduc() {
         <div key={product._id} className="mb-5 ">
           <Link to={`/Productdetail/${product._id}`} className="Card-Link">
             <Card className="product-card card-hover ">
-              <Card.Img variant="top" src={product.image} className="" />
+              <Card.Img variant="top" src={`http://localhost:4000/${product.image}`} className="" />
               <Card.Body >
                 <Card.Title style={{ color: 'black',fontSize:'15px' }}>{product.name}</Card.Title>
                 <Card.Text style={{ color: "red" }}>

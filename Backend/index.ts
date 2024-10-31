@@ -18,7 +18,8 @@ const port = process.env.PORT || 5000;
 connectDB()
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'http://localhost:3001'], // Mảng chứa các origin
+ 
   credentials: true
 }));
 

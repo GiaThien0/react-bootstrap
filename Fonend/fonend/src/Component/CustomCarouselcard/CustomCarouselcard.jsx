@@ -36,7 +36,7 @@ const CustomCarouselcard = ({ selectedCategory }) => {
                     <Col md={3} key={product._id} className="d-flex mb-5">
                         <Link to={`/Productdetail/${product._id}`} className="card-hover w-100">
                             <Card className="product-card d-flex flex-column h-100">
-                                <Card.Img variant="top" src={product.image} />
+                                <Card.Img variant="top" src={`http://localhost:4000/${product.image}`} />
                                 <Card.Body className="d-flex flex-column">
                                     <Card.Title style={{ color: 'black', fontSize: '15px' }}>{product.name}</Card.Title>
                                     <Card.Text style={{ color: "red" }}>

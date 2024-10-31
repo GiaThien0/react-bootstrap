@@ -55,7 +55,7 @@ function Productdetail() {
     <Container className='mt-5'>
       <Row>
         <Col md={7} className='card-hover'>
-          <Image src={product.image} alt="Hình chính" fluid /> 
+          <Image src={`http://localhost:4000/${product.image}`} alt="Hình chính" fluid /> 
         </Col>
         <Col md={5}>
           <Card.Text className='fs-2'>{product.name}</Card.Text> 

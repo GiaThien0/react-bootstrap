@@ -7,14 +7,7 @@ function Products() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
-
-  const [productData, setProductData] = useState({
-    name: '',
-    price: '',
-    description: '',
-    category: ''
-  });
+const [productData, setProductData] = useState({name: '',price: '',description: '',category: ''});
 
   useEffect(() => {
     fetchCategories();
@@ -71,9 +64,20 @@ function Products() {
         fetchProducts();
       } catch (error) {
         console.error('Lỗi khi tải lên:', error.response ? error.response.data : error.message);
-        setError('Không thể thêm sản phẩm. Vui lòng thử lại.');
       }
 };
+const deleteProduct = async (id) => {
+  try {
+    await axiosInstance.delete(`/products/deteleproducts/${id}`);
+    // Cập nhật lại danh sách sản phẩm sau khi xóa
+    setProducts(products.filter((product) => product._id !== id));
+    alert('Sản phẩm đã được xóa thành công!');
+  } catch (error) {
+    console.error('Lỗi khi xóa sản phẩm:', error);
+    alert('Không thể xóa sản phẩm. Vui lòng thử lại.');
+  }
+};
+
 
 
 
@@ -143,21 +147,18 @@ function Products() {
             </Row>
             <Row className="mb-3">
               <Form.Group controlId="roleSelect">
-                <Form.Label>Chọn vai trò</Form.Label>
                 <Form.Select
                   aria-label="Select Role"
                   name="category"
                   value={productData.category}
                   onChange={handleInputChange}
                 >
-                 {categories.map(categori =>(
-
-
-      <option key={categori._id} value={categori._id}>{categori.name}</option>
-
-
-
-                )) }
+                   <option value="" disabled hidden>Choose a category</option>
+    {categories.map((category) => (
+      <option key={category._id} value={category._id}>
+        {category.name}
+      </option>
+    ))}
                 </Form.Select>
               </Form.Group>
             </Row>
@@ -189,7 +190,7 @@ function Products() {
                   <td className="pt-5">{product.category.name}</td>
                   <td>
                     <Button variant="primary" className="mt-5">Sửa</Button>
-                    <Button variant="danger" className="mt-5">Xóa</Button>
+                    <Button variant="danger" className="mt-5"  onClick={() => deleteProduct(product._id)}>Xóa</Button>
                   </td>
                 </tr>
               ))}
