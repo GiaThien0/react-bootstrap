@@ -8,5 +8,5 @@ router.get('/getproducts', productController.getProducts);
 router.get('/getproducts/:id', productController.getProductById);
 router.post('/addproductsadmin',upload.single('image'),productController.adddprouctadm)
 router.delete('/deteleproducts/:id', productController.deleteProductAdm);
-
+router.put('/updateProduct/:id',upload.single('image'),productController.updateProduct)
 export default router;

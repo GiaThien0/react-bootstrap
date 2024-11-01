@@ -7,6 +7,7 @@ import categoryRoute from './src/router/category'
 import cart from './src/router/cart'
 const cors = require('cors');
 dotenv.config();
+const bodyParser = require('body-parser');
 
 
 
@@ -23,6 +24,7 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(bodyParser.json({ limit: '10mb' })); // Tăng giới hạn kích thước
 
 app.use(express.json());
 app.use('/api',userRoute)

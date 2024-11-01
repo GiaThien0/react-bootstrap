@@ -87,6 +87,61 @@ const productController = {
         console.error('Error deleting product:', error);
         res.status(500).json({ error: 'Failed to delete product' });
     }
+},
+
+
+updateProduct: async (req: any, res: any) => {
+    try {
+        const { id } = req.params; // Lấy ID sản phẩm từ tham số URL
+
+        // Tìm sản phẩm theo ID
+        const product = await ProductModel.findById(id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        
+        // Nếu có file mới được tải lên, xử lý xóa file cũ và cập nhật đường dẫn file mới
+        let updatedImagePath = product.image; // Mặc định là đường dẫn hình ảnh cũ
+        if (req.file) {
+            // Đường dẫn hình ảnh cũ
+            const oldImagePath = path.join(__dirname, '..', '..', product.image);
+
+            // Đường dẫn hình ảnh mới
+            updatedImagePath = req.file.path.replace(/\\/g, '/'); // Chuyển đổi dấu \ sang /
+
+            // Xóa hình ảnh cũ
+            fs.unlink(oldImagePath, (err) => {
+                if (err) {
+                    console.error('Error deleting old image:', err);
+                } else {
+                    console.log('Old image deleted successfully:', oldImagePath);
+                }
+            });
+        }
+
+        // Cập nhật thông tin sản phẩm
+        const updatedProduct = await ProductModel.findByIdAndUpdate(
+            id,
+            {
+                name: req.body.name || product.name, // Cập nhật tên
+                price: req.body.price !== undefined ? req.body.price : product.price, // Cập nhật giá nếu có
+                description: req.body.description || product.description, // Cập nhật mô tả
+                image: updatedImagePath, // Cập nhật đường dẫn hình ảnh
+                category: req.body.category || product.category, // Cập nhật category
+            },
+            { new: true } // Trả về sản phẩm đã được cập nhật
+        );
+
+        // Kiểm tra xem sản phẩm đã được cập nhật hay chưa
+        if (!updatedProduct) {
+            return res.status(500).json({ message: 'Failed to update product' });
+        }
+
+        res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ error: 'Failed to update product' });
+    }
 }
 
 }

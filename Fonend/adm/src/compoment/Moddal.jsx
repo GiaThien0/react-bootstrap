@@ -11,7 +11,7 @@ function Moddal({ show, onHide, user, fetchUsers }) {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        await axiosInstance.put(`/auth/updateUser/${user._id}`, {
+        await axiosInstance.put(`auth/updateUser/${user._id}`, {
           name,
           email,
           password,
@@ -77,7 +77,6 @@ function Moddal({ show, onHide, user, fetchUsers }) {
           </Form>
           
         </Modal.Body>
-        <Modal.Body>Đã xảy ra lỗi trong quá cập nhật</Modal.Body>
 
         <Modal.Footer>
           <Button variant="secondary" onClick={onHide}>Đóng</Button>

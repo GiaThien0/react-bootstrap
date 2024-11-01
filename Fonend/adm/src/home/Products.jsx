@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Form, Container, Col, Table, Image } from 'react-bootstrap';
 import axiosInstance from '../utils/aiosConfig';
+import Moddalproducts from '../compoment/Moddalproducts';
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -8,11 +9,15 @@ function Products() {
   const [preview, setPreview] = useState(null);
   const [categories, setCategories] = useState([]);
 const [productData, setProductData] = useState({name: '',price: '',description: '',category: ''});
+const [modalShow, setModalShow] = React.useState(false);
+const [currentProducts, setCurrentProducts] = useState(null);
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
   }, []);
+
+
   const fetchCategories = async () => {
     try {
       const response = await axiosInstance.get('/category/getcategory'); // Đường dẫn API
@@ -21,7 +26,8 @@ const [productData, setProductData] = useState({name: '',price: '',description: 
       console.error('Lỗi khi lấy danh sách loại sản phẩm:', error);
     }
   };
-  // Fetch products from MongoDB
+
+
   const fetchProducts = async () => {
     try {
       const response = await axiosInstance.get('/products/getproducts');
@@ -82,7 +88,7 @@ const deleteProduct = async (id) => {
 
 
   return (
-    <Container fluid>
+    <Container >
       <Row>
         <Col md={4}>
           <Form onSubmit={handleSubmit}>
@@ -153,7 +159,7 @@ const deleteProduct = async (id) => {
                   value={productData.category}
                   onChange={handleInputChange}
                 >
-                   <option value="" disabled hidden>Choose a category</option>
+                   <option value="" disabled hidden>loại sản phẩm</option>
     {categories.map((category) => (
       <option key={category._id} value={category._id}>
         {category.name}
@@ -189,7 +195,9 @@ const deleteProduct = async (id) => {
                   <td className="pt-5">{product.description}</td>
                   <td className="pt-5">{product.category.name}</td>
                   <td>
-                    <Button variant="primary" className="mt-5">Sửa</Button>
+                    <Button variant="primary" className="mt-5" onClick={() => {setModalShow(true) 
+                      setCurrentProducts(product)
+                    }}>Sửa</Button>
                     <Button variant="danger" className="mt-5"  onClick={() => deleteProduct(product._id)}>Xóa</Button>
                   </td>
                 </tr>
@@ -198,6 +206,15 @@ const deleteProduct = async (id) => {
           </Table>
         </Col>
       </Row>
+      <Moddalproducts
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        product = {currentProducts}
+        fetchProducts={fetchProducts}
+        categories={categories}  >        
+        
+        
+        </Moddalproducts>
     </Container>
   );
 }
