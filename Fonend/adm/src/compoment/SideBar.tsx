@@ -40,7 +40,7 @@ function SideBar() {
           <SubMenu label="E-commerce">
           <MenuItem component={<Link to="/adm" />}> admin</MenuItem>
           <MenuItem component={<Link to="/admproducts" />}>  Products</MenuItem>
-          <MenuItem component={<Link to="/e-commerce" />}> E-commerce</MenuItem>
+          <MenuItem component={<Link to="/admOder" />}>Oder cart</MenuItem>
 
           </SubMenu>
           <MenuItem> Documentation </MenuItem>

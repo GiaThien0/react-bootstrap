@@ -20,7 +20,32 @@ const OrderSchema = new Schema({
                 default: 1, // Mặc định là 1
             },
         },
+        
     ],
+    status: {
+        type: String,
+        enum: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'],
+        default: 'pending',
+    },
+    paymentMethod: {
+        type: String,
+        enum: ['credit_card', 'paypal', 'cash_on_delivery'],
+        required: true, // Bắt buộc chọn phương thức thanh toán
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid', 'failed'],
+        default: 'pending', // Mặc định là chờ thanh toán
+    },
+    address: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+    
     totalAmount: {
         type: Number,
         required: true,

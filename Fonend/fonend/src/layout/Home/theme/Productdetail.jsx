@@ -11,24 +11,27 @@ function Productdetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // Khởi tạo useNavigate
-
+  const [userId,setuserid] = useState(null)
   // Thêm state cho số lượng sản phẩm
   const [quantity, setQuantity] = useState(1);
 
   const addToCart = async () => {
-    
-    const userId = localStorage.getItem("userId"); // Lấy userId từ localStorage
+    if (!userId) {
+      console.error('User ID is not available');
+      return;
+    }
+  
     try {
       const response = await axiosInstance.post('cart/addcart', {
-        userId,
+        userId, // Đảm bảo rằng `userid` được truyền
         productId: id,
         quantity,
       });
       console.log(response.data.message); // Thông báo thành công
       console.log(response.data.cart); // Chi tiết giỏ hàng cập nhật
-      navigate('/card')
+      navigate('/Card'); // Điều hướng đến trang giỏ hàng
     } catch (error) {
-      console.error('Error adding product to cart:', error.response.data.message);
+      console.error('Error adding product to cart:', error.response?.data?.message || error.message);
     }
   };
 
@@ -43,9 +46,21 @@ function Productdetail() {
         setLoading(false);
       }
     };
-
-    fetchProduct();
-  }, [id]);
+  
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
+        const { id } = response.data.user;
+        console.log(id);
+        setuserid(id); // Lưu id người dùng vào state
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchProduct(); // Lấy thông tin sản phẩm
+    fetchUserData(); // Lấy thông tin người dùng
+  }, [id]); // Chạy lại khi `id` thay đổi
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;

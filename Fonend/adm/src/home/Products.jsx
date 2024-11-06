@@ -7,10 +7,14 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [categories, setCategories] = useState([]);
 const [productData, setProductData] = useState({name: '',price: '',description: '',category: ''});
 const [modalShow, setModalShow] = React.useState(false);
 const [currentProducts, setCurrentProducts] = useState(null);
+const [categoryName, setCategoryName] = useState('');
+const [message, setMessage] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
+    const [categories, setCategories] = useState([]);
+
 
   useEffect(() => {
     fetchCategories();
@@ -85,10 +89,42 @@ const deleteProduct = async (id) => {
 };
 
 
+const handleAddCategory = async (event) => {
+  event.preventDefault();
 
+  try {
+      const response = await axiosInstance.post('/category/addcategory', { name: categoryName });
+      setMessage(response.data.message);
+      setCategoryName(''); // Xóa tên loại sản phẩm sau khi thêm thành công
+      fetchCategories();
+  } catch (error) {
+      console.error('Lỗi khi thêm loại sản phẩm:', error);
+      setMessage(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.');
+  }
+};
+
+
+
+const handleDeleteCategory = async (event) => {
+  event.preventDefault(); // Ngăn chặn hành vi mặc định của biểu mẫu
+
+  if (!selectedCategory) {
+      setMessage('Vui lòng chọn loại sản phẩm để xóa.');
+      return;
+  }
+
+  try {
+      const response = await axiosInstance.delete(`/category/deletecategory/${selectedCategory}`); // Đường dẫn API tương ứng
+      setMessage(response.data.message);
+      fetchCategories(); // Cập nhật lại danh sách sau khi xóa
+  } catch (error) {
+      console.error('Lỗi khi xóa loại sản phẩm:', error);
+      setMessage('Có lỗi xảy ra khi xóa loại sản phẩm');
+  }
+};
 
   return (
-    <Container >
+    <Container fluid>
       <Row>
         <Col md={4}>
           <Form onSubmit={handleSubmit}>
@@ -170,6 +206,58 @@ const deleteProduct = async (id) => {
             </Row>
             <Button type="submit">Gửi biểu mẫu</Button>
           </Form>
+
+            <div className='pt-5'>
+            <Form onSubmit={handleAddCategory} className='pt-3'>
+            <Row className="pt-3">
+              <Form.Group controlId="validationCustom01" >
+                <Form.Label>Tên loại sản phẩm</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Tên loại sản phẩm"
+                  name="name"
+                  value={categoryName}
+                 onChange={(e) => setCategoryName(e.target.value)}
+                  className="mt-3"
+                />
+                
+              </Form.Group>
+            </Row>
+                <Button type="submit" className="mt-3">Thêm</Button >
+            </Form>
+            {message && <p>{message}</p>}
+
+
+
+            </div>
+            <div>
+            <Form onSubmit={handleDeleteCategory}> 
+                <Row className="mb-3">
+                    <Form.Label>Xóa Loại Sản Phẩm</Form.Label>
+                    <Form.Group controlId="categorySelect">
+                        <Form.Select
+                            aria-label="Chọn loại sản phẩm"
+                            name="category"
+                            value={selectedCategory}
+                            onChange={(e) => setSelectedCategory(e.target.value)} // Cập nhật giá trị đã chọn
+                        >
+                            <option value="" disabled hidden>Loại sản phẩm</option>
+                            {categories.map((category) => (
+                                <option key={category._id} value={category._id}>
+                                    {category.name}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    </Form.Group>
+                </Row>
+                <Button variant="primary" type="submit">Xác Nhận</Button>
+            </Form>
+            {message && <p>{message}</p>} {/* Hiển thị thông báo nếu có */}
+        </div>
+
+
+
         </Col>
         <Col md={8}>
           <h1>Danh Sách Sản Phẩm</h1>

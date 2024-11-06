@@ -16,26 +16,26 @@ const Login = () => {
         setIsLoading(true);
     
         try {
-            const response = await axiosInstance.post('/auth/loginUser', loginData);
+            const response = await axiosInstance.post('/auth/loginUser', loginData,{ withCredentials: true });
     
             if (response.status === 200) {
-                localStorage.setItem('username', response.data.user.name); // Lưu vào localStorage
-                localStorage.setItem('userId', response.data.user.id);
-                localStorage.setItem('role', response.data.user.role);
-                const role = localStorage.getItem('role');
-
+               
+               
+                const role = response.data.user.role;
 
                 if (role === 'admin') {
-                    window.location.href = '/dashboard'; // Chuyển đến trang quản lý admin
+                   
+                        window.location.href = 'http://localhost:3001/adm'; // Chuyển đến trang quản lý admin
+                   
                 } else {
-                    window.location.href = '/'; // Chuyển đến trang quản lý admin
-
+                    window.location.href = '/'; // Chuyển đến trang quản lý người dùng
                 }
             }
               
                 
             
-        } catch (error) {
+        }
+         catch (error) {
             console.error('Lỗi đăng nhập:', error);
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';
             setErrorMessage(message);

@@ -1,35 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import '../Hear/Hear.css';
 import SearchInput from '../SearchInput/SearchInput';
 import { Link } from 'react-router-dom';
 
 import Cookies from 'js-cookie'; // Import thư viện js-cookie
+import axiosInstance from '../../utils/aiosConfig';
 
 
 function Hear() {
-    const username = localStorage.getItem('username'); // Lấy tên người dùng từ localStorage
-    console.log(document.cookie);
+    const [userName, setUserName] = useState('');
+    const [useremail, setUseremail] = useState('');
 
+    useEffect(() => {
 
-    const handleLogout = () => {
-        // Xoá username khỏi localStorage
-        localStorage.removeItem('username');
-         localStorage.removeItem('userId'); // Xóa UserId nếu đã lưu
-        // Xoá cookie
-        Cookies.remove('token'); // Thay 'yourCookieName' bằng tên cookie của bạn
-        
-        // Điều hướng về trang đăng nhập
-        window.location.href = '/';
-        
+        fetchUserData();
+    },);
 
+    const fetchUserData = async () => {
+           
+        try {
+            const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
+            const { name,email } = response.data.user;
+
+            setUserName(name); // Gọi hàm để cập nhật tên người dùng
+            setUseremail(email); // Gọi hàm để cập nhật tên người dùng
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
     };
+    const handleLogout = async () => {
+        try {
+            // Gửi yêu cầu đến server 4000 để logout
+            await axiosInstance.post('/auth/logoutUser', {}, { withCredentials: true });
+    
+            // Xóa thông tin người dùng khỏi localStorage
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('role');
+    
+            // Xóa cookie trên client (nếu đã lưu trên client)
+            Cookies.remove('token');
+    
+            // Điều hướng về trang đăng nhập
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
+    
+
+    
     
     return (  
         <Container fluid className='green-background'>
             <Row className="Hear-1"> 
                 <Col md={3} className="text-center pt-2">
-                    <span><i className="bi bi-envelope">lenguyengiathien0@gmail.com</i></span>/
+                    <span><i className="bi bi-envelope">{useremail}</i></span>/
                     <span><i className="bi bi-house"></i>Trang chủ</span>
                 </Col>
                 <Col md={6}>
@@ -42,12 +69,12 @@ function Hear() {
                             <span className="badge">1</span>
                         </Button>
                     </Link>
-                    {username ? (
+                    {userName ? (
                         <>
                            
                             <Dropdown>
       <Dropdown.Toggle variant="danger" id="dropdown-basic">
-      <span>{username}</span>
+      <span>{userName}</span>
       </Dropdown.Toggle>
 
       <Dropdown.Menu>

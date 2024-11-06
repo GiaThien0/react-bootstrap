@@ -4,6 +4,7 @@ import {  Col, Container, Row ,Offcanvas,Button} from 'react-bootstrap';
 import CustomListgroups from '../../../Component/CustomListgroups/CustomListgroups';
 import CustomCarouselcard from '../../../Component/CustomCarouselcard/CustomCarouselcard';
 
+import { RxHamburgerMenu } from "react-icons/rx";
 
 const Products = () => {
     const [selectedCategory, setSelectedCategory] = useState(null); // Bắt đầu không có danh mục nào được chọn
@@ -21,12 +22,12 @@ const Products = () => {
             <Row>
                 <Col md={2}>
                 <Button variant="primary" onClick={handleShow}>
-        Launch
+                <RxHamburgerMenu />
+                <span style={{marginLeft:'8px'}}>Danh mục sản phẩm</span>
       </Button>
 
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
         <CustomListgroups setSelectedCategory={handleCategorySelect} />

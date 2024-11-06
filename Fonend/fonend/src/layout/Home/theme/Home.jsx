@@ -10,7 +10,8 @@ function Home() {
 
   
   const [selectedCategory, setSelectedCategory] = useState(null); // State cho danh mục đã chọn
- 
+
+  
 
   return (
     <Container className='bg-white'>
@@ -19,7 +20,7 @@ function Home() {
           <CustomListgroups setSelectedCategory={setSelectedCategory} /> {/* Truyền setSelectedCategory */}
         </Col>
         <Col md={9}>
-          <CustomCarousels selectedCategory={selectedCategory} /> {/* Truyền selectedCategory nếu cần */}
+          <CustomCarousels  /> {/* Truyền selectedCategory nếu cần */}
         </Col>
       </Row>
       <div className='mt-5'>

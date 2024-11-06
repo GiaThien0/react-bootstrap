@@ -166,7 +166,8 @@ const Cart = {
         } catch (error: any) {
             res.status(500).json({ message: error.message });
         }
-    }
+    },
+     
 }
 
 export default Cart;

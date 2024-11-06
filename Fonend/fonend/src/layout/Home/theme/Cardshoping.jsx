@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Table, Image, Button } from 'react-bootstrap';
 import axiosInstance from '../../../utils/aiosConfig';
+import { useNavigate } from 'react-router-dom';
 
-function Cardshoping({ userId }) {
+function Cardshoping() {
+    const navigate = useNavigate(); // Sử dụng useNavigate thay vì useHistory
+
     const [cart, setCart] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     // Lấy giỏ hàng khi component mount
-    
+    const [userId, setuserId] = useState(null);
+
     useEffect(() => {
         // Nếu không có userId, đặt giỏ hàng thành rỗng và dừng API call
         if (!userId) {
-            setCart({ products: [] });
+            setCart({ });
             setLoading(false);
             return;
         }
@@ -27,8 +30,44 @@ function Cardshoping({ userId }) {
                 setLoading(false);
             }
         };
+       
         fetchCart();
     }, [userId]);
+    
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
+                const { id } = response.data.user;
+    
+               
+    
+                setuserId(id);
+                console.log("User ID fetched:", id);
+            } catch (error) {
+                setError('Lỗi khi lấy thông tin người dùng: ' + (error.response?.data.message || error.message));
+                console.error('Error fetching user data:', error);
+            }
+        };
+    
+        fetchUserData();
+    }, []);
+
+    const handleCheckout = () => {
+        const totalAmount = calculateTotal();
+        const products = cart.products;
+    
+        console.log('Dữ liệu thanh toán trước khi điều hướng:', { totalAmount, products, userId });
+    
+        if (products.length === 0) {
+            alert("Giỏ hàng của bạn trống. Vui lòng thêm sản phẩm để thanh toán.");
+            return;
+        }
+    
+        navigate('/checkout', {
+            state: { totalAmount, products, userId },
+        });
+    };
     // Xóa toàn bộ giỏ hàng
     const clearCart = async () => {
         try {
@@ -89,9 +128,7 @@ function Cardshoping({ userId }) {
     };
 
     // Hiển thị thông báo lỗi nếu có
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+   
 
     // Hiển thị trạng thái loading
     if (loading) {
@@ -106,7 +143,7 @@ function Cardshoping({ userId }) {
         return cart.products.reduce((total, item) => {
             const price = item.product?.price || 0; // Lấy giá từ sản phẩm
             return total + (price * item.quantity); // Tính tổng
-        }, 0).toLocaleString(); // Định dạng tổng
+        }, 0); // Định dạng tổng
     };
 
     return (
@@ -126,26 +163,24 @@ function Cardshoping({ userId }) {
                 <tbody>
                 {Array.isArray(cart.products) && cart.products.length > 0 ? (
         cart.products.map(item => {
-            const product = item.product;
-            const totalPrice = (product.price || 0) * item.quantity; // Tính tổng giá cho sản phẩm này
             return (
-                <tr key={product._id}>
+                <tr key={item.product._id}>
                     <td className='text-center' style={{ width: '20rem' }}>
-                        <Image src={`http://localhost:4000/${product.image}`} fluid style={{ width: '50%' }} />
+                        <Image src={`http://localhost:4000/${item.product.image}`} fluid style={{ width: '50%' }} />
                     </td>
-                    <td className='text-center p-5'>{product.name}</td>
+                    <td className='text-center p-5'>{item.product.name}</td>
                     <td className='text-center p-5'>{item.quantity}</td>
                     <td className='text-center p-5'>
-                        <Button type="button" onClick={(e) => increaseQuantity(e, item._id)}>+</Button>
+                        <Button type="button" onClick={(e) => increaseQuantity(e, item.product._id)}>+</Button>
                     </td>
                     <td className='text-center p-5'>
-                        <Button type="button" onClick={() => decreaseQuantity(product._id)}>-</Button>
+                        <Button type="button" onClick={() => decreaseQuantity(item.product._id)}>-</Button>
                     </td>
                     <td className='text-center p-5'>
-                        {product.price ? product.price.toLocaleString() : 'N/A'} VND
+                        {item.product.price ? item.product.price.toLocaleString() : 'N/A'} VND
                     </td>
                     <td className='text-center p-5'>
-                        {totalPrice.toLocaleString()} VND
+                        {(item.product.price || 0) * item.quantity.toLocaleString()} VND
                     </td>
                 </tr>
             );
@@ -157,11 +192,11 @@ function Cardshoping({ userId }) {
     )}
                 </tbody>
             </Table>
-            <h4>Tổng giá trị giỏ hàng: {calculateTotal()} VND</h4>
+            <h4>Tổng giá trị giỏ hàng: {calculateTotal().toLocaleString()} VND</h4>
 
             <Button className='mt-5' onClick={clearCart}>Xóa toàn bộ sản phẩm</Button>
             <div className="d-flex justify-content-end">
-                <Button>Thanh toán đơn hàng</Button>
+                <Button onClick={handleCheckout}>Thanh toán đơn hàng</Button>
             </div>
         </Container>
     );

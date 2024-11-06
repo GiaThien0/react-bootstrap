@@ -65,7 +65,7 @@ const authController = {
 
             // Tạo token
             const token = jwt.sign(
-                { id: user._id, role: user.role, name: user.name },
+                { id: user._id, role: user.role, name: user.name ,email :user.email },
                 tokenSecret,
                 { expiresIn: "1h" }
             );
@@ -75,11 +75,13 @@ const authController = {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 maxAge: 3600000
+                
             });
 
             res.status(200).json({
                 message: "Login successful",
                 user: { id: user._id, name: user.name,role: user.role  },
+                token: token
             });
 
         } catch (err) {
@@ -92,8 +94,11 @@ const authController = {
     logoutUser: async (req :any, res:any) => {
         try {
             // Xóa cookie ở server nếu cần
-            res.clearCookie('token'); // Đảm bảo cookie token được xóa
-            
+            res.clearCookie('token', {
+                path: '/',         // Đường dẫn cookie
+                sameSite: 'None',  // Cấu hình SameSite
+                secure: true       // Chỉ định cookie chỉ được gửi qua HTTPS
+            });
             // Trả về phản hồi thành công
             res.status(200).json({ message: "Logout successful" });
         } catch (error) {
@@ -101,6 +106,13 @@ const authController = {
             res.status(500).json({ message: "Internal Server Error", error });
         }
     },
+
+
+
+
+
+
+    
     addUser: async (req:any, res :any) => {
         try {
             // Xác thực xem người dùng hiện tại có vai trò là admin không
@@ -113,7 +125,9 @@ const authController = {
             if (!name || !email || !password || !role) {
                 return res.status(400).json({ message: "Missing required fields" });
             }
-
+            if (name === "user" || name === "admin") {
+                return res.status(400).json({ message: "Bạn không được đặt tên là admin hoặc user" });
+            }
             // Kiểm tra xem email đã tồn tại chưa
             const existingUser = await User.findOne({ email });
             if (existingUser) {

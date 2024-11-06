@@ -3,8 +3,9 @@ import './App.css';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import Home from './home/Home';
 import SideBar from './compoment/SideBar';
-import Navbard from './compoment/Navbar/Navbar';
+import Navbard from './compoment/CustomNavbar/CustomNavbar';
 import Products from './home/Products';
+import Oder from './home/Oder';
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
               <Route path="/adm" element={<Home />} />
 
               <Route path="/admproducts" element={<Products />} />
+              <Route path="/admOder" element={<Oder />} />
+
             </Routes>
           </div>
         </div>

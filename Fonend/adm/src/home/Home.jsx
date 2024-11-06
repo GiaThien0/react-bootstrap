@@ -14,9 +14,13 @@ function Home() {
   const [modalShow, setModalShow] = React.useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
+
+ 
   useEffect(() => {
+    
     fetchUsers();
 }, []);
+
 
   const fetchUsers = async () => {
     try {
@@ -53,7 +57,7 @@ const handleDelete = async (id) => {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event) => { //gọi hàm khi chưa nhập của react-bootrap
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
