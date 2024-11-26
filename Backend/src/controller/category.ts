@@ -1,5 +1,6 @@
 import CategoryModel from '../models/category';
 import ProductModel from '../models/productModel';
+const { ObjectId } = require('mongoose').Types;
 
 const categoryController = {   
 
@@ -61,13 +62,28 @@ deletecategory : async (req:any, res :any) => {
         return res.status(500).json({ message: 'Có lỗi xảy ra, vui lòng thử lại.' });
     }
 
+},
+listproduct : async (req:any, res :any) => {
+    const { category } = req.query;  // Lấy category từ query
+
+    try {
+        let products;
+
+        // Nếu có category thì lọc theo category, nếu không có category thì trả về tất cả sản phẩm
+        if (category && category !== 'null') {
+            products = await ProductModel.find({ category: category });  // Lọc theo category
+        } else {
+            products = await ProductModel.find();  // Trả về tất cả sản phẩm nếu category là null hoặc không có
+        }
+
+        res.json(products);  // Trả về sản phẩm dưới dạng JSON
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: 'Error fetching products' });  // Trả lỗi nếu có lỗi
+    }
+
 }
-
-
 }
-
-
-
 
 
 export default categoryController;

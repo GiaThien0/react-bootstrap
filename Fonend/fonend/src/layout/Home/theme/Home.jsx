@@ -1,17 +1,12 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 import CustomCarousels from '../../../Component/CustomCarousels/CustomCarousels';
 import CustomListgroups from '../../../Component/CustomListgroups/CustomListgroups';
-import { Container, Row, Col } from 'react-bootstrap';
 import CustomProduc from '../../../Component/CustomProduc/CustomProduc';
-
 import CustomCarouselcard from '../../../Component/CustomCarouselcard/CustomCarouselcard';
 
 function Home() {
-
-  
   const [selectedCategory, setSelectedCategory] = useState(null); // State cho danh mục đã chọn
-
-  
 
   return (
     <Container className='bg-white'>
@@ -20,20 +15,13 @@ function Home() {
           <CustomListgroups setSelectedCategory={setSelectedCategory} /> {/* Truyền setSelectedCategory */}
         </Col>
         <Col md={9}>
-          <CustomCarousels  /> {/* Truyền selectedCategory nếu cần */}
+          <CustomCarousels  /> {/* Truyền selectedCategory vào CustomCarousels */}
         </Col>
       </Row>
       <div className='mt-5'>
-        
-        <CustomProduc></CustomProduc>
-
-
+        <CustomProduc />
       </div>
-      <div className='mt-5'>
-
       
-        <CustomCarouselcard></CustomCarouselcard>
- </div>
     </Container>
   );
 }

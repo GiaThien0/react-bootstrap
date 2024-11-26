@@ -4,7 +4,7 @@ import { FaStar, FaStarHalf } from "react-icons/fa";
 import { useNavigate, useParams } from 'react-router-dom'; 
 import axiosInstance from '../../../utils/aiosConfig'; 
 import './Productdetail.css';
-
+import Review from '../../../Component/comment/Review';
 function Productdetail() {
   const { id } = useParams(); 
   const [product, setProduct] = useState(null); 
@@ -14,7 +14,15 @@ function Productdetail() {
   const [userId,setuserid] = useState(null)
   // Thêm state cho số lượng sản phẩm
   const [quantity, setQuantity] = useState(1);
+  const [reviewData, setReviewData] = useState(null); // State để lưu dữ liệu đánh giá
+  const [email, setemail] = useState(null); // State để lưu dữ liệu đánh giá
 
+
+  const handleReviewSubmit = (data) => {
+
+    setReviewData( data);
+    // Thêm logic xử lý: lưu vào cơ sở dữ liệu, gọi API...
+};
   const addToCart = async () => {
     if (!userId) {
       console.error('User ID is not available');
@@ -46,32 +54,61 @@ function Productdetail() {
         setLoading(false);
       }
     };
+    console.log(id)
   
     const fetchUserData = async () => {
       try {
         const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-        const { id } = response.data.user;
-        console.log(id);
+        const { id,email } = response.data.user;
         setuserid(id); // Lưu id người dùng vào state
+        setemail(email)
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-  
+    
+
     fetchProduct(); // Lấy thông tin sản phẩm
     fetchUserData(); // Lấy thông tin người dùng
   }, [id]); // Chạy lại khi `id` thay đổi
 
+
+
+
+
+
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!product) return <p>Product not found</p>;
-
+  const renderStars = (rating) => {
+    return (
+        <div style={{ display: 'flex' }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                    key={star}
+                    size={30}
+                    color={star <= rating ? "#FFD700" : "#ccc"} // Vàng khi được chọn, xám khi chưa
+                />
+            ))}
+        </div>
+    );
+};
   return (
     <Container className='mt-5'>
       <Row>
-        <Col md={7} className='card-hover'>
-          <Image src={`http://localhost:4000/${product.image}`} alt="Hình chính" fluid /> 
+        <Col md={7} >
+        <div className='card-hover text-center'>
+          <Image  src={`http://localhost:4000/${product.image}`} alt="Hình chính" fluid /> 
+          </div>
+         
         </Col>
+
+
+
+
+
+
         <Col md={5}>
           <Card.Text className='fs-2'>{product.name}</Card.Text> 
           <span className='d-flex'>
@@ -103,6 +140,25 @@ function Productdetail() {
           </div>
         </Col>
       </Row>
+
+      <Row >
+        <Col md={7}>
+      <Review onSubmit={handleReviewSubmit} email={email} userId={userId}>  </Review>
+          {reviewData && (
+                <div className="mt-5">
+                    <p><strong>Số sao:</strong>  {renderStars(reviewData.rating)}</p>
+                    <p><strong>Bình luận:</strong> {reviewData.comment}</p>
+                    <p>{email}</p>
+                </div>
+            )}
+
+</Col>
+<Col></Col>
+            </Row>
+
+         
+
+
     </Container>
   );
 }

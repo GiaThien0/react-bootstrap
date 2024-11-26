@@ -18,7 +18,10 @@ const OrderSchema = new Schema({
                 type: Number,
                 required: true,
                 default: 1, // Mặc định là 1
-            },
+            },isApproved: {
+                type: Boolean,
+                default: false, // Mặc định sản phẩm chưa được duyệt
+              },
         },
         
     ],

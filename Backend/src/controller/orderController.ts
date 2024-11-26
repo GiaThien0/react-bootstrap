@@ -78,7 +78,37 @@ const checkout = {
             res.status(500).json({ message: 'Lỗi khi đọc order', error });
         }
 
+    },
+    checkoutproducoder: async (req:any, res:any) => {
+        const { orderId, productId } = req.params;
+    const { isApproved } = req.body;
+
+    try {
+        // Tìm đơn hàng theo orderId
+        const order = await OrderModel.findById(orderId);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+
+        // Tìm sản phẩm trong mảng 'products' bằng cách so sánh với productId
+        const product = order.products.find(p => p.product.toString() === productId); // Sửa 'p._id' thành 'p.product'
+        if (!product) {
+            return res.status(404).send({ message: 'Product not found in the order' });
+        }
+
+        // Cập nhật trạng thái duyệt cho sản phẩm
+        product.isApproved = isApproved;
+
+        // Lưu đơn hàng sau khi cập nhật trạng thái sản phẩm
+        await order.save();
+
+        res.status(200).send({ message: 'Product approval status updated successfully', order });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error updating approval status' });
     }
+    }
+      
 
 
 };

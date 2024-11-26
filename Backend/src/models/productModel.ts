@@ -31,6 +31,10 @@ const ProductSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    reviews: [{ 
+        type: Schema.Types.ObjectId, 
+        ref: 'Review'  // Liên kết với model Review
+    }],
     updatedAt: {
         type: Date,
         default: Date.now,
