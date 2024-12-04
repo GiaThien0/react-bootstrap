@@ -11,13 +11,9 @@ function CustomNavbar() {
 
 
     useEffect(() => {
-      console.log(userName,userRole)
-      if (!loading && userRole !== 'admin' && userRole !== '') {
-        // Nếu không phải admin, chuyển hướng về trang chủ
-        window.location.href = 'http://localhost:3000'; // Chuyển đến trang quản lý admin
-    }
+   
   }, [userRole,loading,userName]);
-    
+  
     const handleLogout = async () => {
       try {
           // Gửi yêu cầu đến server 4000 để logout
@@ -37,7 +33,7 @@ function CustomNavbar() {
           console.error('Error during logout:', error);
       }
   };
-  
+ 
   return (
     <div>
       <Navbar expand="lg" className="bg-body-tertiary ">

@@ -71,9 +71,13 @@ const [message, setMessage] = useState('');
             },
         });
         console.log('Sản phẩm đã được thêm:', response.data);
+        alert('sản phẩm đã dc thêm vào')
+
         fetchProducts();
       } catch (error) {
         console.error('Lỗi khi tải lên:', error.response ? error.response.data : error.message);
+        alert('bạn nhập sai dữ liệu sản phẩm cần loại bỏ dấu . trong giá tiền và chọn loại sản phẩm khi click vào hoặc chưa có hình ảnh.');
+
       }
 };
 const deleteProduct = async (id) => {
@@ -276,7 +280,7 @@ const handleDeleteCategory = async (event) => {
               {products.map((product) => (
                 <tr key={product._id}>
                   <td>
-                    <Image src={`http://localhost:4000/${product.image}`}className="w-25 pt-5" rounded />
+                    <Image src={`http://localhost:4000/${product.image}`} className="w-25 pt-5" rounded />
                   </td>
                   <td className="pt-5">{product.name}</td>
                   <td className="pt-5">{product.price.toLocaleString()}</td>

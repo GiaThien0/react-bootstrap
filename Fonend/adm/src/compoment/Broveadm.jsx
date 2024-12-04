@@ -10,16 +10,20 @@ function Broveadm({ setUserName, setUserRole,setLoading }) {
             try {
                 const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
                 const { name, role } = response.data.user;
-                setUserName(name); // Gọi hàm để cập nhật tên người dùng
-                setUserRole(role); // Gọi hàm để cập nhật vai trò người dùng
-               
+                setUserName(name);
+                setUserRole(role);
             } catch (error) {
                 console.error('Error fetching user data:', error);
+        
+                // Nếu lỗi 401, chuyển hướng về trang đăng nhập
+                if (error.response?.status === 401) {
+                    window.location.href = 'http://localhost:3000'; 
+                }
             } finally {
                 setLoading(false); // Hoàn tất tải
             }
         };
-
+            
         fetchUserData();
     }, [setUserName, setUserRole,setLoading]); // Gọi lại khi hàm setUserName và setUserRole thay đổi
 

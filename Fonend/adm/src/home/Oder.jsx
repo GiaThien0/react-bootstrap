@@ -51,9 +51,9 @@ function Oder() {
   
   
 
-  const renderProducts = (products, order, isApproved = false) =>
+  const renderProducts = (products, order, isApproved) =>
     products
-      .filter((item) => item.isApproved === isApproved)
+      .filter((item) => item.isApproved === isApproved) // Lọc sản phẩm theo trạng thái duyệt
       .map((item) => (
         <tr key={`${order._id}-${item.product._id}`}>
           <td>{order.user.email}</td>
@@ -69,49 +69,26 @@ function Oder() {
           <td>{order.phone}</td>
           <td>{order.totalAmount}</td>
           <td>{order.createdAt}</td>
-          {!isApproved && (
-            <td>
+          <td>
+            {isApproved ? (
+              <Button
+                variant="danger"
+                onClick={() => handleToggleApproval(order._id, item.product._id, true)}
+              >
+                Bỏ duyệt
+              </Button>
+            ) : (
               <Button
                 variant="success"
                 onClick={() => handleToggleApproval(order._id, item.product._id, false)}
               >
                 Duyệt
               </Button>
-            </td>
-          )}
+            )}
+          </td>
         </tr>
       ));
   
-      const renderProductss = (products, order, isApproved = true) =>
-        products
-          .filter((item) => item.isApproved === isApproved)
-          .map((item) => (
-            <tr key={`${order._id}-${item.product._id}`}>
-              <td>{order.user.email}</td>
-              <td>{item.product.name}</td>
-              <td>{item.quantity}</td>
-              <td>
-                <Image src={`http://localhost:4000/${item.product.image}`} className="w-25" rounded />
-              </td>
-              <td>{order.status}</td>
-              <td>{order.paymentMethod}</td>
-              <td>{order.paymentStatus}</td>
-              <td>{order.address}</td>
-              <td>{order.phone}</td>
-              <td>{order.totalAmount}</td>
-              <td>{order.createdAt}</td>
-              {isApproved && (
-                <td>
-                  <Button
-                    variant="danger"
-                    onClick={() => handleToggleApproval(order._id, item.product._id, true)}
-                  >
-                    Bỏ duyệt
-                  </Button>
-                </td>
-              )}
-            </tr>
-          ));
       
   return (
     <div>
@@ -157,7 +134,7 @@ function Oder() {
           </tr>
         </thead>
         <tbody>
-        {checkout.map((order) => renderProductss(order.products, order, true))}
+        {checkout.map((order) => renderProducts(order.products, order, true))}
 
         </tbody>
       </Table>

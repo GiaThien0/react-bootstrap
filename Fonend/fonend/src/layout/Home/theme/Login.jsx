@@ -56,7 +56,6 @@ const Login = () => {
                 <Col md={6} className='border border-3' style={{ width: '400px' }}>
                     <div className='text-center pt-2'>
                         <h2><b>Đăng Nhập</b></h2>
-                        <p style={{ color: 'Silver' }}>Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục.</p>
                     </div>
                     <Form onSubmit={handleLogin}>
                         <Form.Group className="mb-3" controlId="formBasicEmail">

@@ -30,6 +30,7 @@ const productController = {
 
   adddprouctadm :async (req:any,res:any) =>{
     try {
+        
         // Truy cập file đã được tải lên qua req.file
         const filePath = req.file?.path.replace(/\\/g, '/');
 
@@ -47,7 +48,10 @@ const productController = {
         
         res.status(200).json({ message: 'File uploaded successfully!', product });
     } catch (error) {
-        console.error('Error uploading file:', error);
+        if (req.file) {
+            // Xóa ảnh đã tải lên nếu có lỗi xảy ra trong quá trình lưu sản phẩm
+            fs.unlinkSync(req.file.path); // Xóa ảnh đã tải lên nếu lưu sản phẩm thất bại
+          }
         res.status(500).json({ error: 'Failed to upload file.' });
     }
   },

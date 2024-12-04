@@ -6,6 +6,7 @@ import productsRoute from './src/router/products'
 import categoryRoute from './src/router/category'
 import order from './src/router/order'
 import cookieParser from 'cookie-parser';
+import review from './src/router/rewiew'
 
 import cart from './src/router/cart'
 const cors = require('cors');
@@ -41,6 +42,7 @@ app.use("/v1/products",productsRoute );
 app.use("/v1/category",categoryRoute);
 app.use("/v1/cart",cart);
 app.use("/v1/order",order);
+app.use("/v1/review",review);
 
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {

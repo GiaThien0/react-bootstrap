@@ -72,10 +72,11 @@ listproduct : async (req:any, res :any) => {
         // Nếu có category thì lọc theo category, nếu không có category thì trả về tất cả sản phẩm
         if (category && category !== 'null') {
             products = await ProductModel.find({ category: category });  // Lọc theo category
+
+
         } else {
             products = await ProductModel.find();  // Trả về tất cả sản phẩm nếu category là null hoặc không có
         }
-
         res.json(products);  // Trả về sản phẩm dưới dạng JSON
     } catch (error) {
         console.error("Error fetching products:", error);

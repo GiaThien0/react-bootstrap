@@ -3,7 +3,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import CustomCarousels from '../../../Component/CustomCarousels/CustomCarousels';
 import CustomListgroups from '../../../Component/CustomListgroups/CustomListgroups';
 import CustomProduc from '../../../Component/CustomProduc/CustomProduc';
-import CustomCarouselcard from '../../../Component/CustomCarouselcard/CustomCarouselcard';
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null); // State cho danh mục đã chọn

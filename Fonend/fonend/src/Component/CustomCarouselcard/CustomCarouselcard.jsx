@@ -6,27 +6,57 @@ import axiosInstance from '../../utils/aiosConfig';
 const CustomCarouselcard = () => {
     const [products, setProducts] = useState([]);
     const location = useLocation();
-    
     // Lấy tham số 'category' từ query string trong URL
     const searchParams = new URLSearchParams(location.search);
     const selectedCategory = searchParams.get('category'); // Lấy category từ URL
+    const searchQuery = searchParams.get('query');  // Lấy query (từ khóa tìm kiếm) từ URL
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                // Truyền tham số 'category' vào nếu có, nếu không có thì sẽ lấy tất cả sản phẩm
-                const response = await axiosInstance.get('/category/listproduct', {
-                    params: { category: selectedCategory }
-                });
-                setProducts(response.data);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            }
-        };
+        // Nếu có searchQuery, gọi API tìm kiếm sản phẩm
+        if (searchQuery) {
+            fetchsearch();
+        } 
+        // Nếu không có searchQuery, gọi API tìm sản phẩm theo category
+        else if (selectedCategory) {
+            fetchcategory();
+        }else {
+            fetchAllProducts();
+        }
+    }, [selectedCategory, searchQuery]);
+    const fetchcategory = async () => {
+        try {
+            // Truyền tham số 'category' vào nếu có, nếu không có thì sẽ lấy tất cả sản phẩm
+            const response = await axiosInstance.get('/category/listproduct', {
+                params: { category: selectedCategory }
+            });
+            setProducts(response.data);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } 
+    };
+    const fetchsearch = async () => {
+        try {
+            // Gọi API tìm kiếm sản phẩm theo query (từ khóa tìm kiếm) và category (danh mục)
+            const response = await axiosInstance.get('/products/search', {
+                params: {
+                    query: searchQuery  // Truyền từ khóa tìm kiếm nếu có
+                }
+                
+            });
 
-        fetchProducts();
-    }, [selectedCategory]);  // Dữ liệu sẽ được tải lại khi selectedCategory thay đổi
-
+            setProducts(response.data);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        } 
+    };
+    const fetchAllProducts = async () => {
+        try {
+            const response = await axiosInstance.get('/category/listproduct');
+            setProducts(response.data);
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
     return (
         <Container>
             <Row>

@@ -1,16 +1,16 @@
-import React from 'react'
-import { Button } from 'react-bootstrap'
+import React from 'react';
 import { FcGoogle } from "react-icons/fc";
+import { Button } from 'react-bootstrap'; // Import các component của react-bootstrap
 
 function Socialogin() {
   return (
-    <Button className='border   w-100 '   
-        style={{width:'100%' ,backgroundColor:'white',color:'black',fontSize:'20px'}}
-        
-     type="submit"
-     ><FcGoogle style={{width:'30px', height:'30px'}}/>
-                    <span style={{marginLeft:'10px'}} >Google</span> </Button>
-  )
+    
+          <Button variant="outline-danger" className="w-100">
+          <FcGoogle style={{fontSize:'25px'}}/> {/* Biểu tượng Google */}
+           
+          </Button>
+      
+  );
 }
 
-export default Socialogin
+export default Socialogin;

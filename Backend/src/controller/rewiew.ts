@@ -10,7 +10,7 @@ const rewiewController = {
         if (!rating || !comment || !productId || !userId || !email) {
             return res.status(400).json({ message: 'All fields are required' });
         }
-    
+        
         try {
             // Tạo mới một review
             const newReview = new ReviewModel({
@@ -44,7 +44,24 @@ const rewiewController = {
             res.status(500).json({ message: 'Error submitting review' });
         }
 },
+        getrewiew: async (req: any, res: any) => {
+            const { productId } = req.params; // Lấy productId từ tham số URL
 
+            try {
+              // Tìm tất cả các bình luận có cùng productId
+              const reviews = await ReviewModel.find({ productId: productId });
+          
+              if (!reviews || reviews.length === 0) {
+                return res.status(404).json({ message: 'No reviews found for this product.' });
+              }
+          
+              // Trả về danh sách bình luận
+              res.status(200).json(reviews);
+            } catch (error) {
+              console.error(error);
+              res.status(500).json({ message: 'Server error' });
+            }
+},
 
 }
     export default rewiewController; 

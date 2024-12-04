@@ -11,10 +11,7 @@ const ReviewSchema = new Schema({
         type: String, // ID của người dùng thực hiện đánh giá
         required: true,
     },
-    name: {
-        type: String, // Tên người dùng hiển thị
-        required: true,
-    },
+   
     email: {
         type: String, // Email người dùng
         required: true,
