@@ -14,8 +14,10 @@ import Cardshoping from './layout/Home/theme/Cardshoping';
 import Productdetail from './layout/Home/theme/Productdetail';
 import ChechkoutPage from './layout/Home/theme/ChechkoutPage';
 import Login from './layout/Home/theme/Login';
-import Dashboard from './layout/adm/Dashboard';
 import Register from './layout/Home/theme/register';
+import User from './layout/Home/theme/User';
+import ForgotPassword from './Component/comment/ForgotPassword';
+import ResetPassword from './Component/comment/ResetPassword';
 
 
 const App: React.FC = () => {
@@ -34,7 +36,11 @@ const App: React.FC = () => {
                 <Route path="/Checkout" element={<ChechkoutPage />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/Register" element={<Register />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/User" element={<User />} />
+                <Route path="/ForgotPassword" element={<ForgotPassword />} />
+                <Route path="/ResetPassword" element={<ResetPassword />} />
+
+
             </Routes>
             <CustomFooter />
         </Router>

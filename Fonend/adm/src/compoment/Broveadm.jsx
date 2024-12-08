@@ -12,13 +12,12 @@ function Broveadm({ setUserName, setUserRole,setLoading }) {
                 const { name, role } = response.data.user;
                 setUserName(name);
                 setUserRole(role);
+                
             } catch (error) {
                 console.error('Error fetching user data:', error);
-        
+            
                 // Nếu lỗi 401, chuyển hướng về trang đăng nhập
-                if (error.response?.status === 401) {
-                    window.location.href = 'http://localhost:3000'; 
-                }
+                
             } finally {
                 setLoading(false); // Hoàn tất tải
             }

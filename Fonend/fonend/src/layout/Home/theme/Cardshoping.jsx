@@ -10,15 +10,11 @@ function Cardshoping() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     // Lấy giỏ hàng khi component mount
-    const [userId, setuserId] = useState(null);
+    const [userId, setuserId] = useState('');
 
     useEffect(() => {
         // Nếu không có userId, đặt giỏ hàng thành rỗng và dừng API call
-        if (!userId) {
-            setCart({ });
-            setLoading(false);
-            return;
-        }
+       
 
         const fetchCart = async () => {
             try {
@@ -32,7 +28,7 @@ function Cardshoping() {
         };
        
         fetchCart();
-    }, [userId]);
+    }, [userId],[cart]);
     
     useEffect(() => {
         const fetchUserData = async () => {
@@ -139,12 +135,13 @@ function Cardshoping() {
         if (!cart.products || cart.products.length === 0) {
             return 0; // Trả về 0 nếu không có sản phẩm
         }
-
+    
         return cart.products.reduce((total, item) => {
             const price = item.product?.price || 0; // Lấy giá từ sản phẩm
             return total + (price * item.quantity); // Tính tổng
         }, 0); // Định dạng tổng
     };
+    
 
     return (
         <Container>
@@ -180,8 +177,9 @@ function Cardshoping() {
                         {item.product.price ? item.product.price.toLocaleString() : 'N/A'} VND
                     </td>
                     <td className='text-center p-5'>
-                        {(item.product.price || 0) * item.quantity.toLocaleString()} VND
-                    </td>
+    {(item.product.price * item.quantity).toLocaleString('vi-VN')} VND
+</td>
+                    
                 </tr>
             );
         })
@@ -192,7 +190,7 @@ function Cardshoping() {
     )}
                 </tbody>
             </Table>
-            <h4>Tổng giá trị giỏ hàng: {calculateTotal().toLocaleString()} VND</h4>
+            <h4>Tổng giá trị giỏ hàng: {calculateTotal().toLocaleString('vi-VN')} VND</h4>
 
             <Button className='mt-5' onClick={clearCart}>Xóa toàn bộ sản phẩm</Button>
             <div className="d-flex justify-content-end">

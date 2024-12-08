@@ -58,40 +58,49 @@ const productController = {
 
 
 
-   deleteProductAdm : async (req :any, res :any) => {
-    try {
-        const { id } = req.params; // Lấy ID sản phẩm từ tham số URL
-
-        // Tìm sản phẩm trong cơ sở dữ liệu
-        const product = await ProductModel.findById(id);
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-
-        // Đường dẫn hình ảnh
-        const imagePath = product.image; 
-        const fullPath = path.join(__dirname, '..', '..', imagePath); // Cập nhật đường dẫn
-
-        
-
-        // Xóa sản phẩm khỏi cơ sở dữ liệu
-        await ProductModel.findByIdAndDelete(id);
-
-        // Xóa file hình ảnh từ hệ thống tệp
-        fs.unlink(fullPath, (err) => {
-            if (err) {
-                console.error('Error deleting image:', err);
-                return res.status(500).json({ error: 'Failed to delete image' });
-            }
-            console.log('Image deleted successfully:', fullPath);
-        });
-
-        res.status(200).json({ message: 'Product deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting product:', error);
-        res.status(500).json({ error: 'Failed to delete product' });
-    }
-},
+ 
+  deleteProductAdm: async (req: any, res: any) => {
+      try {
+          const { id } = req.params; // Lấy ID sản phẩm từ tham số URL
+  
+          // Tìm sản phẩm trong cơ sở dữ liệu
+          const product = await ProductModel.findById(id);
+          if (!product) {
+              return res.status(404).json({ error: 'Product not found' });
+          }
+  
+          // Đường dẫn hình ảnh
+          const imagePath = product.image; 
+          const fullPath = path.join(__dirname, '..', '..', imagePath); // Cập nhật đường dẫn
+  
+          // Xóa sản phẩm khỏi cơ sở dữ liệu
+          await ProductModel.findByIdAndDelete(id);
+  
+          // Kiểm tra xem tệp có tồn tại không trước khi xóa
+          fs.access(fullPath, fs.constants.F_OK, (err) => {
+              if (err) {
+                  console.log('Image not found, skipping deletion');
+                  // Nếu tệp không tồn tại, bỏ qua phần xóa hình ảnh
+                  return res.status(200).json({ message: 'Product deleted successfully, but image not found' });
+              }
+  
+              // Nếu tệp tồn tại, xóa tệp
+              fs.unlink(fullPath, (err) => {
+                  if (err) {
+                      console.error('Error deleting image:', err);
+                      return res.status(500).json({ error: 'Failed to delete image' });
+                  }
+                  console.log('Image deleted successfully:', fullPath);
+                  res.status(200).json({ message: 'Product and image deleted successfully' });
+              });
+          });
+  
+      } catch (error) {
+          console.error('Error deleting product:', error);
+          res.status(500).json({ error: 'Failed to delete product' });
+      }
+  },
+  
 
 
 updateProduct: async (req: any, res: any) => {

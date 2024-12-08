@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import Cookies from 'js-cookie'; // Import thư viện js-cookie
 import axiosInstance from '../../utils/aiosConfig';
+import { MdPerson } from 'react-icons/md';
 
 
 function Hear() {
@@ -78,12 +79,18 @@ function Hear() {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1"><Button variant="outline-Secondary" className='Hear-2' onClick={handleLogout}>
+        <Dropdown.Item href="/User"><Button variant="outline-Secondary" className='Hear-2' >
+        <MdPerson />
+
+                                <span>Thông tin của bạn</span>
+                            </Button></Dropdown.Item>
+        
+                            <Dropdown.Item href="#/action-2"><Button variant="outline-Secondary" className='Hear-2' onClick={handleLogout}>
                                 <i className="bi bi-box-arrow-right me-1"></i>
                                 <span>Đăng xuất</span>
                             </Button></Dropdown.Item>
-        
       </Dropdown.Menu>
+      
     </Dropdown>
                            
                         </>

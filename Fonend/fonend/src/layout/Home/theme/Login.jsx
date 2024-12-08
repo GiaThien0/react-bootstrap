@@ -36,8 +36,8 @@ const Login = () => {
             
         }
          catch (error) {
-            console.error('Lỗi đăng nhập:', error);
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';
+
             setErrorMessage(message);
         } finally {
             setIsLoading(false);
@@ -84,7 +84,7 @@ const Login = () => {
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="Remember me" />
                             </Form.Group>
-                            <Link to="/forgot-password" style={{ textDecoration: 'none' }}>Forgot password?</Link>
+                            <Link to="/ForgotPassword" style={{ textDecoration: 'none' }}>Forgot password?</Link>
                         </div>
                         <Button className='w-100' variant="primary" type="submit" disabled={isLoading}>
                             {isLoading ? 'Đang đăng nhập...' : 'Login'}

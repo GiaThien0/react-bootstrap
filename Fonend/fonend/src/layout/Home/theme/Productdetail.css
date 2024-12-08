@@ -58,8 +58,5 @@
     border: 4px solid red;
 }
 
-.card-hover:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
-    
-}
+
 

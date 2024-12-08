@@ -15,6 +15,7 @@ function Productdetail() {
   const [quantity, setQuantity] = useState(1);
   const [email, setEmail] = useState(null);
   const [message, setmessage] = useState(null);
+  const [address, setaddress] = useState(null);
 
   const navigate = useNavigate();
 
@@ -32,9 +33,10 @@ function Productdetail() {
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-      const { id, email } = response.data.user;
+      const { id, email ,address} = response.data.user;
       setUserId(id);
       setEmail(email);
+      setaddress(address)
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -92,7 +94,7 @@ function Productdetail() {
             <span className="fw-bold underline">{product.price.toLocaleString('vi-VN')} đ</span>
           </h2>
           <div className='d-flex gap-3'>
-            <p>Giao đến <span className="fw-bold">Q1, P. Bến Nghé, Hồ Chí Minh</span></p>
+            <p>Giao đến <span className="fw-bold">{address|| "Địa chỉ chưa có"}</span></p>
             <a href="/">Giao đến</a>
           </div>
           <hr />
