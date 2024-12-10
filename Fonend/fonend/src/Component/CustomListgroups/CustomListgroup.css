@@ -1,16 +1,58 @@
-.lista{
-    
-    border: white;
-    font-size: 20px;
-    border-bottom:1px solid silver ;
-    padding-top: 20px;
+/* Đặt nền cho container */
+.category-list-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8f9fa; /* Nền nhẹ nhàng */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tạo bóng đổ */
 }
-.lista2{
-     border: none;
-     text-decoration: none;
-     color: black;
-   
+
+/* Tiêu đề danh mục */
+.category-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
 }
-.lista2:hover{
-    color: red;
+
+/* Danh sách các item */
+.category-list {
+    padding: 0;
+}
+
+/* Các mục trong danh sách */
+.category-item {
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.2rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Thay đổi màu nền khi hover */
+.category-item:hover {
+    background-color: #dc3545; /* Màu đỏ khi hover */
+    color: #fff; /* Màu chữ trắng */
+    transform: translateY(-3px); /* Di chuyển lên một chút */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Tạo hiệu ứng bóng */
+}
+
+/* Các mục đã chọn */
+.category-item.active {
+    background-color: #28a745; /* Màu xanh khi đã chọn */
+    color: white;
+}
+
+/* Thiết kế responsive */
+@media (max-width: 768px) {
+    .category-item {
+        font-size: 1rem; /* Giảm kích thước chữ cho màn hình nhỏ */
+        padding: 10px;
+    }
+
+    .category-title {
+        font-size: 1.5rem; /* Giảm kích thước tiêu đề */
+    }
 }

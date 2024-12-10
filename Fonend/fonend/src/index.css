@@ -11,3 +11,66 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.card-body {
+  font-size: 16px;
+}
+
+h2 {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* Contact.css */
+.contact-page {
+  background-color: #f8f9fa;
+  padding: 60px 0;
+}
+
+.contact-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-form h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.contact-form .form-control {
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+.contact-form button {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+}
+
+.contact-form button:hover {
+  background-color: #0056b3;
+}
+
+
+

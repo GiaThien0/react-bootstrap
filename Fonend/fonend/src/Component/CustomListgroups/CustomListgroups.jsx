@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/aiosConfig';
-import '../CustomListgroups/CustomListgroup.css';
+import './CustomListgroup.css'; // Đảm bảo đã thêm đúng đường dẫn CSS
 
 const CustomListgroups = ({ setSelectedCategory }) => {
     const [categories, setCategories] = useState([]);
@@ -21,8 +21,6 @@ const CustomListgroups = ({ setSelectedCategory }) => {
         fetchCategories();
     }, []);
 
-  
-
     // Xử lý khi người dùng click vào danh mục
     const handleCategoryClick = (category) => {
         setSelectedCategory(category);
@@ -30,17 +28,16 @@ const CustomListgroups = ({ setSelectedCategory }) => {
     };
 
     return (
-        <div>
-            <h2 className='text-center'><b>Danh mục sản phẩm</b></h2>
-            <ListGroup>
+        <div className="category-list-container">
+            <h2 className="text-center category-title">Danh mục sản phẩm</h2>
+            <ListGroup className="category-list">
                 {categories.map((category) => (
-                    <ListGroup.Item key={category._id} className='lista'>
-                        <div
-                            className="w-100 lista2"
-                            onClick={() => handleCategoryClick(category._id)} // Gọi khi click vào danh mục
-                        >
-                            {category.name}
-                        </div>
+                    <ListGroup.Item
+                        key={category._id}
+                        className="category-item"
+                        onClick={() => handleCategoryClick(category._id)}
+                    >
+                        {category.name}
                     </ListGroup.Item>
                 ))}
             </ListGroup>

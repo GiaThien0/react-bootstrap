@@ -1,3 +1,53 @@
-.navabr{
-    background-color: white;
-}
+/* CustomNav.css */
+
+/* Tùy chỉnh Navbar với nền màu trắng */
+.navbar-custom {
+    background-color: #ffffff; /* Màu nền trắng */
+    padding: 5px 0; /* Giảm padding trên và dưới của Navbar */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ cho Navbar */
+  }
+  
+  .navbar-custom .navbar-brand {
+    font-size: 1.2rem; /* Giảm kích thước chữ của brand */
+    color: #333; /* Màu chữ của brand */
+  }
+  
+  .navbar-custom .navbar-toggler {
+    border-color: #333; /* Đổi màu cho icon hamburger */
+  }
+  
+  .navbar-custom .navbar-toggler-icon {
+    background-color: #333; /* Màu của icon menu */
+  }
+  
+  /* Tùy chỉnh các liên kết trong Navbar */
+  .navbar-links .navbar-item {
+    color: #333; /* Màu chữ tối cho các link */
+    font-size: 1rem; /* Giảm kích thước chữ của các link */
+    padding: 6px 12px; /* Giảm padding của các link */
+    text-transform: uppercase; /* Chữ in hoa */
+    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+  }
+  
+  .navbar-links .navbar-item:hover {
+    color: #e60000; /* Màu chữ đỏ khi hover */
+    background-color: rgba(255, 0, 0, 0.1); /* Nền đỏ nhẹ khi hover */
+    border-radius: 4px; /* Bo góc cho các link khi hover */
+  }
+  
+  /* Tùy chỉnh khi Navbar collapse trên màn hình nhỏ */
+  @media (max-width: 992px) {
+    .navbar-custom {
+      padding: 10px 0; /* Giảm padding khi màn hình nhỏ */
+    }
+  
+    .navbar-links {
+      text-align: center;
+    }
+  
+    .navbar-item {
+      font-size: 1rem; /* Giảm kích thước chữ khi trên màn hình nhỏ */
+      margin: 8px 0;
+    }
+  }
+  
