@@ -1,40 +1,46 @@
-.green-background{
-    background-color: red;
-    color: white; /* Màu chữ */
-    font-size: 12px;
-        
-}
-.Hear-1{
-    padding-top: 0.5rem;
-    padding-bottom:0.5rem ;
-    text-align:center;
-}
-.Hear-2{
-    
-    
-    padding-left: 10px;
-    border: 1px solid black; /* Đường viền */
-    
-}
-.Hear-2:hover{
-    background-color: rgba(173, 216, 230, 0.5); /* Màu xanh nhạt */
-    color:black; /* Màu chữ nếu cần */
+/* Định dạng phần tử có màu nền và kiểu chữ */
+.green-background {
+    background-color: red; /* Màu nền đỏ */
+    color: white; /* Màu chữ trắng */
+    font-size: 12px; /* Kích thước chữ */
+    position: sticky; /* Đảm bảo nó dính khi cuộn */
+    top: 0; /* Đặt nó ở trên cùng */
+    z-index: 1000; /* Đảm bảo phần tử không bị che khuất */
 }
 
+/* Định dạng cho phần tử Hear-1 */
+.Hear-1 {
+    padding: 0.5rem 0; /* Padding trên và dưới */
+    text-align: center; /* Canh giữa */
+    position: relative; /* Đảm bảo sẽ di chuyển theo khi cuộn */
+}
 
+/* Định dạng cho phần tử Hear-2 */
+.Hear-2 {
+    padding-left: 10px; /* Padding bên trái */
+    border: 1px solid black; /* Đường viền đen */
+}
+
+/* Hiệu ứng hover cho Hear-2 */
+.Hear-2:hover {
+    background-color: rgba(173, 216, 230, 0.5); /* Màu nền xanh nhạt */
+    color: black; /* Màu chữ khi hover */
+}
+
+/* Định dạng cho icon giỏ hàng */
 .cart-icon {
     position: relative; /* Đặt vị trí tương đối cho nút giỏ hàng */
 }
 
-.badge{
-    
-    position: absolute; /* Đặt vị trí tuyệt đối cho số */
-    top: -10px !important; /* Điều chỉnh vị trí dọc lên trên (thử giá trị khác như -15px nếu cần) */
-    right: -0.2px; /* Điều chỉnh vị trí ngang (thử giá trị khác như -15px nếu cần) */
-    background-color: black; /* Màu nền cho số */
-   color: red;
-    border-radius: 50%; /* Tạo hình tròn cho số */
+/* Định dạng cho badge (số trong vòng tròn) */
+.badge {
+    position: absolute; /* Đặt vị trí tuyệt đối */
+    top: -10px; /* Vị trí dọc lên trên */
+    right: -0.2px; /* Vị trí ngang */
+    background-color: black; /* Màu nền đen */
+    color: red; /* Màu chữ đỏ */
+    border-radius: 50%; /* Hình tròn */
     padding: 2px 5px; /* Khoảng cách xung quanh số */
     font-size: 12px; /* Kích thước chữ */
-    font-weight: bold; /* Làm đậm chữ */
+    font-weight: bold; /* Chữ đậm */
 }

@@ -62,19 +62,17 @@ function CustomCardproduc() {
       containerClass="carousel-container"
       removeArrowOnDeviceType={["tablet", "mobile"]}
       dotListClass="custom-dot-list-style"
-      itemClass="carousel-item-padding-40-px"
-      style={{ width: '25px' }}
     >
       {products.map((product) => (
         <div key={product._id} className="mb-5">
           <Link to={`/Productdetail/${product._id}`} className="Card-Link">
-            <Card className="product-card card-hover">
-              <Card.Img variant="top" src={`http://localhost:4000/${product.image}`} className="" />
+            <Card className="product-card card-hover ">
+              <Card.Img  src={`http://localhost:4000/${product.image}`} className="" />
               <Card.Body>
                 <Card.Title style={{ color: 'black', fontSize: '15px' }}>{product.name}</Card.Title>
                 <Card.Text style={{ color: "red" }}>
-                  Giá bán: <span>{product.price.toLocaleString('vi-VN')} đ</span>
-                  <Card.Img variant="top" src="https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg" className="pt-2" />
+                  Giá bán: {product.price.toLocaleString('vi-VN')} đ
+                  <Card.Img  src="https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg" className="pt-2" />
                 </Card.Text>
               </Card.Body>
             </Card>

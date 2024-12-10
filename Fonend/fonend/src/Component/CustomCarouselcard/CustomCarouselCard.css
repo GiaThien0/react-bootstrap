@@ -1,9 +1,61 @@
 .card-hover {
     transition: box-shadow 0.3s ease;
-    text-decoration: none; /* Loại bỏ gạch chân */
     color: inherit;
 }
 
 .card-hover:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Bóng mờ khi hover */
+}
+
+.Card-Link {
+    text-decoration: none;
+}
+
+.carousel-item-padding-40-px {
+    padding: 10px; /* Tăng khoảng cách giữa các sản phẩm */
+}
+
+.product-card {
+    margin: 0 auto; /* Căn giữa sản phẩm trong carousel */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Đảm bảo chiều cao của card chiếm hết không gian */
+    max-height: 100%;
+}
+
+.product-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.product-card .card-title {
+    color: black;
+    font-size: 15px;
+    margin-bottom: 10px; /* Thêm khoảng cách giữa tiêu đề và giá */
+    flex-shrink: 0; /* Ngăn tiêu đề bị co lại */
+    height: 40px; /* Đảm bảo chiều cao tiêu đề cố định */
+    overflow: hidden; /* Nếu tên quá dài, cắt bớt */
+    text-overflow: ellipsis; /* Hiển thị dấu ba chấm khi tên quá dài */
+}
+
+.product-card .card-text {
+    color: red;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-card .card-text span {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.product-card .card-img-top {
+    margin-bottom: 10px;
+    max-height: 200px; /* Giới hạn chiều cao ảnh */
+    object-fit: cover; /* Đảm bảo ảnh không bị biến dạng */
 }

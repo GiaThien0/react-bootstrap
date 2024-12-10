@@ -52,30 +52,35 @@ function Review({ email, userId, productId }) {
         </div>
     }
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-    
-        try {
-            const response = await axiosInstance.post('/review/reviewdata', {
-                userId,      // ID người dùng
-                email,       // Email người dùng
-                rating,      // Điểm đánh giá (sao)
-                comment,     // Nội dung bình luận
-                productId, 
-            });
-            
-            setMessage('Đánh giá thành công!');
-            setRating(0);
-            setComment('');
-            console.log(rating, comment, email, userId, productId);
-
-        } catch (error) {
-            console.error('Error submitting review:', error);
-            setMessage('xin vui long dang nhap truoc khi thuc hien');
-        } finally {
-            setLoading(false);
-        }
-    };
+      e.preventDefault();
+      setLoading(true);
+  
+      try {
+          // Gửi đánh giá mới
+          await axiosInstance.post('/review/reviewdata', {
+              userId,      // ID người dùng
+              email,       // Email người dùng
+              rating,      // Điểm đánh giá (sao)
+              comment,     // Nội dung bình luận
+              productId,
+          });
+  
+          // Cập nhật lại thông báo sau khi gửi đánh giá thành công
+          setMessage('Đánh giá thành công!');
+          setRating(0);
+          setComment('');
+  
+          // Sau khi gửi thành công, tải lại danh sách đánh giá để hiển thị đánh giá mới
+          const response = await axiosInstance.get(`/review/getrewiew/${productId}`);
+          setReviews(response.data);
+  
+      } catch (error) {
+          console.error('Error submitting review:', error);
+          setMessage('Xin vui lòng đăng nhập trước khi thực hiện.');
+      } finally {
+          setLoading(false);
+      }
+  };
     
     return (
         <div className='mt-5'>
@@ -85,7 +90,7 @@ function Review({ email, userId, productId }) {
                     {/* Truyền hàm setRating vào StarRating */}
                     <StarRating onRatingChange={(value) => setRating(value)} />
 
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                    <Form.Group className="mb-3 mt-5" controlId="exampleForm.ControlTextarea1">
                         <Form.Control
                             as="textarea"
                             rows={3}

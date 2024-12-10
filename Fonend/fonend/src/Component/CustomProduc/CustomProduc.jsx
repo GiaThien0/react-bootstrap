@@ -10,8 +10,8 @@ function CustomProduc() {
 
     <div className='bg mt-5'>
           
-            <Button className=' mt-2' style={{marginLeft:'20px'}} variant='danger'>2 NGÀY DEAL SỐC : GIẢM THÊM ĐẾN 500K</Button>
-       
+            <Button className=' mt-2' style={{marginLeft:'20px',marginBottom:'20px'}} variant='danger'>2 NGÀY DEAL SỐC : GIẢM THÊM ĐẾN 500K</Button>
+
            <CustomCardproduc></CustomCardproduc>
 
               

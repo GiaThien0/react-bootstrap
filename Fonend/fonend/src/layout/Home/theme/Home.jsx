@@ -8,8 +8,8 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null); // State cho danh mục đã chọn
 
   return (
-    <Container className='bg-white'>
-      <Row className='pt-5'>
+    <Container className=' mt-3 border  rounded ' style={{backgroundColor:'#fff'}}>
+      <Row className='pt-2'>
         <Col md={3}>
           <CustomListgroups setSelectedCategory={setSelectedCategory} /> {/* Truyền setSelectedCategory */}
         </Col>

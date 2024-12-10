@@ -87,7 +87,7 @@ function Productdetail() {
             <FaStar style={{ color: 'gold', fontSize: '1.3rem' }} />
             <FaStar style={{ color: 'gold', fontSize: '1.3rem' }} />
             <FaStarHalf style={{ color: 'gold', fontSize: '1.3rem' }} />
-            <p style={{ color: 'Silver' }}>Đã bán {product.sold}</p>
+            <p style={{ color: 'Silver' }}> Sản phẩm còn lại {product.stock}</p>
           </div>
           <Card.Text>{product.description}</Card.Text>
           <h2 style={{ color: 'red' }} className='mt-2'>
@@ -100,10 +100,22 @@ function Productdetail() {
           <hr />
           <p>Số lượng</p>
           <div className='d-flex gap-2 justify-content-center' style={{ backgroundColor: '#EEEEEE' }}>
-            <Button className='custom-button' onClick={() => setQuantity(quantity + 1)}>+</Button>
-            <p>{quantity}</p>
-            <Button className='custom-button' onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</Button>
-          </div>
+  <Button 
+    className='custom-button' 
+    onClick={() => setQuantity(prevQuantity => prevQuantity < product.stock ? prevQuantity + 1 : product.stock)}
+  >
+    +
+  </Button>
+  <div>
+    <p style={{ paddingTop: '20px' }}>{quantity}</p>
+  </div>
+  <Button 
+    className='custom-button' 
+    onClick={() => setQuantity(prevQuantity => prevQuantity > 1 ? prevQuantity - 1 : 1)}
+  >
+    -
+  </Button>
+</div>
           <hr />
           <div className='d-flex gap-5'>
             <Button className='w-50 custom-buttonred' onClick={addToCart}>Chọn mua</Button>

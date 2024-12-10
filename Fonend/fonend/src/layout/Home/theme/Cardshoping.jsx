@@ -13,10 +13,8 @@ function Cardshoping() {
     const [userId, setuserId] = useState('');
 
     useEffect(() => {
-        // Nếu không có userId, đặt giỏ hàng thành rỗng và dừng API call
-       
-
         const fetchCart = async () => {
+            if (!userId) return; // Nếu không có userId, không cần gọi API
             try {
                 const response = await axiosInstance.get(`/cart/usercart/${userId}`);
                 setCart(response.data);
@@ -26,9 +24,9 @@ function Cardshoping() {
                 setLoading(false);
             }
         };
-       
+    
         fetchCart();
-    }, [userId],[cart]);
+    }, [userId]);
     
     useEffect(() => {
         const fetchUserData = async () => {
@@ -50,16 +48,21 @@ function Cardshoping() {
     }, []);
 
     const handleCheckout = () => {
+        // Tính toán tổng số tiền
         const totalAmount = calculateTotal();
-        const products = cart.products;
+        
+        // Kiểm tra nếu cart có sản phẩm
+        const products = cart.products ? cart.products : [];
     
         console.log('Dữ liệu thanh toán trước khi điều hướng:', { totalAmount, products, userId });
     
+        // Kiểm tra giỏ hàng có sản phẩm không
         if (products.length === 0) {
             alert("Giỏ hàng của bạn trống. Vui lòng thêm sản phẩm để thanh toán.");
             return;
         }
     
+        // Điều hướng đến trang thanh toán
         navigate('/checkout', {
             state: { totalAmount, products, userId },
         });
@@ -75,53 +78,58 @@ function Cardshoping() {
     };
 
     // Tăng số lượng sản phẩm trong giỏ hàng
-    const increaseQuantity = async (event, productId) => {
-        event.preventDefault();
-        try {
-             await axiosInstance.put(`/cart/increase/${userId}/${productId}`);
-            // Cập nhật giỏ hàng
-            setCart(prevCart => {
-                const updatedProducts = prevCart.products.map(item => {
-                    if (item.product._id === productId) {
-                        return { ...item, quantity: item.quantity + 1 }; // Cập nhật số lượng
-                    }
-                    return item;
-                });
-                return { ...prevCart, products: updatedProducts };
-            });
-        } catch (error) {
-            setError(error.response?.data.message || error.message);
-        }
-    };
-
-    // Giảm số lượng sản phẩm trong giỏ hàng
-    const decreaseQuantity = async (productId) => {
-        try {
-            await axiosInstance.put(`/cart/decrease/${userId}/${productId}`);
-            
-            // Cập nhật giỏ hàng
-            setCart(prevCart => {
-                const updatedProducts = prevCart.products.reduce((acc, item) => {
-                    if (item.product._id === productId) {
-                        // Nếu số lượng giảm xuống 0, không thêm sản phẩm vào mảng mới
-                        if (item.quantity > 1) {
-                            // Nếu số lượng lớn hơn 1, giảm số lượng
-                            acc.push({ ...item, quantity: item.quantity - 1 });
-                        }
-                        // Nếu số lượng = 1, không thêm vào giỏ hàng (thực tế đã xóa sản phẩm)
+   // Tăng số lượng sản phẩm trong giỏ hàng
+   const increaseQuantity = async (event, productId, stock) => {
+    event.preventDefault();
+    try {
+        setCart(prevCart => {
+            const updatedProducts = prevCart.products.map(item => {
+                if (item.product._id === productId) {
+                    if (item.quantity < stock) {
+                        return { ...item, quantity: item.quantity + 1 }; // Tăng số lượng nếu chưa vượt quá tồn kho
                     } else {
-                        // Nếu không phải sản phẩm đang giảm, thêm vào mảng mới
-                        acc.push(item);
+                        alert('đã hết sản phẩm không thể tăng thêm');
+                        return item;
                     }
-                    return acc;
-                }, []);
-    
-                return { ...prevCart, products: updatedProducts };
+                }
+                return item;
             });
-        } catch (error) {
-            setError(error.response?.data.message || error.message);
-        }
-    };
+            return { ...prevCart, products: updatedProducts };
+        });
+
+        // Gửi yêu cầu tăng số lượng lên backend nếu số lượng trong giỏ thay đổi
+        await axiosInstance.put(`/cart/increase/${userId}/${productId}`);
+    } catch (error) {
+        setError(error.response?.data.message || error.message);
+    }
+};
+
+// Giảm số lượng sản phẩm trong giỏ hàng
+const decreaseQuantity = async (productId, stock) => {
+    try {
+        setCart(prevCart => {
+            const updatedProducts = prevCart.products.reduce((acc, item) => {
+                if (item.product._id === productId) {
+                    if (item.quantity > 1) {
+                        acc.push({ ...item, quantity: item.quantity - 1 }); // Giảm số lượng nếu >= 1
+                    } else {
+                        // Nếu số lượng giảm xuống 0, xóa sản phẩm khỏi giỏ hàng
+                        acc.push({ ...item, quantity: 0 });
+                    }
+                } else {
+                    acc.push(item); // Cập nhật các sản phẩm khác
+                }
+                return acc;
+            }, []);
+            return { ...prevCart, products: updatedProducts };
+        });
+
+        // Gửi yêu cầu giảm số lượng lên backend nếu số lượng trong giỏ thay đổi
+        await axiosInstance.put(`/cart/decrease/${userId}/${productId}`);
+    } catch (error) {
+        setError(error.response?.data.message || error.message);
+    }
+};
 
     // Hiển thị thông báo lỗi nếu có
    

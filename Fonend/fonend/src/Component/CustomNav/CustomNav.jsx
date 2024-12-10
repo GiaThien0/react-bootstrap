@@ -13,8 +13,8 @@ function CustomNav() {
           <img
             src={logo}
             alt="Logo"
-            width="100"
-            height="80"
+            width="30"
+            height="20"
             className="d-inline-block align-top"
           />
         </Navbar.Brand>
@@ -25,10 +25,10 @@ function CustomNav() {
         {/* Menu */}
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto navbar-links d-flex justify-content-center w-100">
-            <Nav.Link as={Link} to="/" className="navbar-item">Trang chủ</Nav.Link>
-            <Nav.Link as={Link} to="/Products" className="navbar-item">Sản phẩm</Nav.Link>
-            <Nav.Link as={Link} to="/Contact" className="navbar-item">Liên hệ</Nav.Link>
-            <Nav.Link as={Link} to="/Address" className="navbar-item">Địa chỉ</Nav.Link>
+            <Nav.Link as={Link} to="/" className="navbar-item mx-3">Trang chủ</Nav.Link>
+            <Nav.Link as={Link} to="/Products" className="navbar-item  mx-3">Sản phẩm</Nav.Link>
+            <Nav.Link as={Link} to="/Contact" className="navbar-item  mx-3">Liên hệ</Nav.Link>
+            <Nav.Link as={Link} to="/Address" className="navbar-item  mx-3">Địa chỉ</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
