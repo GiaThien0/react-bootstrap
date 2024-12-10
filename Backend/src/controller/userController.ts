@@ -95,7 +95,7 @@ const authController = {
 
     // Tạo token
     const token = jwt.sign(
-        { id: user._id, role: user.role, name: user.name, email: user.email, address: user.address },
+        { id: user._id, role: user.role, name: user.name, email: user.email, address: user.address,phone : user.phone },
         tokenSecret,
         { expiresIn: "1h" }
     );
@@ -110,7 +110,7 @@ const authController = {
     // Phản hồi thành công, không cần trả token trong body nếu đã sử dụng cookie
     res.status(200).json({
         message: "Login successful",
-        user: { id: user._id, name: user.name, role: user.role, address: user.address }
+        user: { id: user._id, name: user.name, role: user.role, address: user.address,phone : user.phone }
     });
 
 } catch (err:any) {
@@ -137,12 +137,7 @@ const authController = {
     },
     addUser: async (req:any, res :any) => {
         try {
-            // Xác thực xem người dùng hiện tại có vai trò là admin không
-            // if (req.user.role !== 'admin') {
-            //     return res.status(403).json({ message: "Forbidden: You don't have permission to add users" });
-            // }
-
-            // Kiểm tra dữ liệu đầu vào
+           
             const { name, email, password, role } = req.body;
             if (!name || !email || !password || !role) {
                 return res.status(400).json({ message: "Missing required fields" });
@@ -166,6 +161,7 @@ const authController = {
                 email,
                 password: hashedPassword,
                 role: role === 'admin' ? 'admin' : 'user', // Chỉ chấp nhận 'admin' hoặc 'user'
+                isVerified : false
             });
 
             // Lưu người dùng vào cơ sở dữ liệu
@@ -201,7 +197,7 @@ const authController = {
     },
     updateUser: async (req: any, res: any) => {
         const { id } = req.params;
-        const { name, email, password, role } = req.body;
+        const { name, email, password, role,isVerified  } = req.body;
     
         const updateData: any = {}; // Tạo một đối tượng rỗng để chứa dữ liệu cập nhật
     
@@ -214,6 +210,9 @@ const authController = {
             updateData.password = hashedPassword;
         }
         if (role) updateData.role = role;
+        if (typeof isVerified === 'boolean') { // Kiểm tra nếu isVerified là kiểu boolean (true/false)
+            updateData.isVerified = isVerified; // Cập nhật trạng thái xác minh
+        }
     
         try {
             const updatedUser = await User.findByIdAndUpdate(

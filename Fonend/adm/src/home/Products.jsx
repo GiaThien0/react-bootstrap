@@ -7,8 +7,16 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [preview, setPreview] = useState(null);
-const [productData, setProductData] = useState({name: '',price: '',description: '',category: ''});
-const [modalShow, setModalShow] = React.useState(false);
+  const [productData, setProductData] = useState({
+    name: '',
+    price: '',
+    description: '',
+    category: '',
+    stock: '', // Thêm trường stock
+  });
+  
+  
+  const [modalShow, setModalShow] = React.useState(false);
 const [currentProducts, setCurrentProducts] = useState(null);
 const [categoryName, setCategoryName] = useState('');
 const [message, setMessage] = useState('');
@@ -51,6 +59,9 @@ const [message, setMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "stock" && value < 0) {
+      return; // Nếu là số âm thì không thay đổi giá trị
+    }
     setProductData({ ...productData, [name]: value });
   };
 
@@ -63,6 +74,7 @@ const [message, setMessage] = useState('');
     formData.append('description', productData.description);
     formData.append('category', productData.category);
     formData.append('image', selectedImage); // Sử dụng selectedImage đã được lưu trữ
+    formData.append('stock', productData.stock);
 
     try {
         const response = await axiosInstance.post('/products/addproductsadmin', formData, {
@@ -180,6 +192,25 @@ const handleDeleteCategory = async (event) => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Row>
+            <Row className="">
+  <Form.Group controlId="validationCustomStock">
+    <Form.Label>Số lượng trong kho</Form.Label>
+    <Form.Control
+      required
+      type="number"
+      placeholder="Số lượng"
+      name="stock"
+      value={productData.stock}
+      onChange={handleInputChange}
+      min="0" // Đảm bảo không có số âm
+
+    />
+    <Form.Control.Feedback type="invalid">
+      Bạn chưa điền số lượng sản phẩm
+    </Form.Control.Feedback>
+  </Form.Group>
+</Row>
+
             <Row>
               <Form.Group controlId="formFile" className="mb-3">
                 <Form.Label>Upload Hình Ảnh</Form.Label>
@@ -272,7 +303,10 @@ const handleDeleteCategory = async (event) => {
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
                 <th>Giới thiệu</th>
+
                 <th>Loại sản phẩm</th>
+                <th>Số lượng trong kho</th>
+
                 <th>Hành Động</th>
               </tr>
             </thead>
@@ -286,6 +320,8 @@ const handleDeleteCategory = async (event) => {
                   <td className="pt-5">{product.price.toLocaleString()}</td>
                   <td className="pt-5">{product.description}</td>
                   <td className="pt-5">{product.category.name}</td>
+                  <td className="pt-5">{product.stock}</td>
+
                   <td>
                     <Button variant="primary" className="mt-5" onClick={() => {setModalShow(true) 
                       setCurrentProducts(product)

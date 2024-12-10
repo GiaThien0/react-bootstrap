@@ -146,7 +146,7 @@ const handleDelete = async (id) => {
             </Row>
             <Button type="submit" >Gửi biểu mẫu</Button>
           </Form>
-          {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>} {/* Hiển thị thông báo lỗi */}
+          {errorMessage && <div className="alert alert-success mt-3">{errorMessage}</div>} {/* Hiển thị thông báo lỗi */}
 
         </Col>
         <Col md={8}>
@@ -159,33 +159,37 @@ const handleDelete = async (id) => {
                         <th>Tên</th>
                         <th>Email</th>
                         <th>Vai Trò</th>
+                        <th>kich hoat tai khoan</th>
+
                         <th>Hành Động</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                {users.map(user => (
+  {users.map(user => (
+    <tr key={user._id}>
+      <td>{user._id}</td>
+      <td>{user.name}</td>
+      <td>{user.email}</td>
+      <td>{user.role}</td>
+      <td>{user.isVerified ? 'Đã xác nhận' : 'Chưa xác nhận'}</td> {/* Kiểm tra giá trị của isVerified */}
+      <td>
+        <Button variant="primary" onClick={() => {
+          setCurrentUser(user);
+          setModalShow(true);
+        }}>Sửa</Button>
+        <Button variant="danger" onClick={() => handleDelete(user._id)}>Xóa</Button>
+      </td>
+    </tr>
+  ))}
+  <Moddal
+    show={modalShow}
+    onHide={() => setModalShow(false)}
+    user={currentUser} // Truyền user hiện tại vào modal
+    fetchUsers={fetchUsers}
+  />
+</tbody>
 
-                        <tr  key={user._id}>
-                            <td>{user._id}</td>
-                            <td>{user.name}</td>
-                            <td>{user.email}</td>
-                            <td>{user.role}</td>
-                            <td>
-                            <Button variant="primary" onClick={() => {
-                                               setCurrentUser(user); 
-                                               setModalShow(true);    
-                                              }}>sửa</Button>
-                                <Button variant="danger" onClick={()=> handleDelete(user._id)}>Xóa</Button>
-                            </td>
-                        </tr>
-                                 ))}
-                      <Moddal
-  show={modalShow}
-  onHide={() => setModalShow(false)}
-  user={currentUser} // Truyền user hiện tại vào modal
-  fetchUsers={fetchUsers}
-/>
-                </tbody>
             </Table>
       
         </Col>

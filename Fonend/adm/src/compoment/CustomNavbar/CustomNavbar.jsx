@@ -10,12 +10,12 @@ function CustomNavbar() {
   const [loading, setLoading] = useState(true); // Khởi tạo loading
 
   useEffect(() => {
-    if (!loading) {
-      // Nếu không phải admin, chuyển hướng đến trang localhost:3000
-      if (userRole !== 'admin') {
-        window.location.href = 'http://localhost:3000';
-      }
-    }
+    // if (!loading) {
+    //   // Nếu không phải admin, chuyển hướng đến trang localhost:3000
+    //   if (userRole !== 'admin') {
+    //     window.location.href = 'http://localhost:3000';
+    //   }
+    // }
   }, [userRole, loading]);
 
   const handleLogout = async () => {

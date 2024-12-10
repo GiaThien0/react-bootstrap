@@ -16,6 +16,8 @@ function User() {
   const fetchUserData = async () => {
     try {
       const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
+      console.log('API response:', response.data);  // Kiểm tra phản hồi từ API
+
       const { name, address, phone,id,email } = response.data.user;  // Giả sử API trả về name, address và phone
       setUserId(id);
       setemail(email)

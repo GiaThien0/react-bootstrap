@@ -30,29 +30,37 @@ const productController = {
 
   adddprouctadm :async (req:any,res:any) =>{
     try {
-        
-        // Truy cập file đã được tải lên qua req.file
         const filePath = req.file?.path.replace(/\\/g, '/');
+        const stockValue = parseInt(req.body.stock || 0, 10);
 
-        // Tạo sản phẩm mới
+        // Kiểm tra giá trị stock
+        if (stockValue < 0) {
+            if (req.file) {
+                fs.unlinkSync(req.file.path); // Xóa file nếu có lỗi
+            }
+            return res.status(400).json({ error: 'Stock value cannot be negative.' });
+        }
+
+        // Tạo sản phẩm mới với thông tin từ request
         const product = new ProductModel({
             name: req.body.name,
             price: req.body.price,
             description: req.body.description,
-            image: filePath, // Đường dẫn tới file hình ảnh
-            category: req.body.category, // Nếu bạn có trường category trong form
+            image: filePath,
+            category: req.body.category,
+            stock: stockValue, // Gán giá trị stock
         });
-            
-        // Lưu sản phẩm vào MongoDB
+
+        // Lưu sản phẩm vào database
         await product.save();
-        
-        res.status(200).json({ message: 'File uploaded successfully!', product });
+
+        res.status(200).json({ message: 'Product added successfully!', product });
     } catch (error) {
         if (req.file) {
-            // Xóa ảnh đã tải lên nếu có lỗi xảy ra trong quá trình lưu sản phẩm
-            fs.unlinkSync(req.file.path); // Xóa ảnh đã tải lên nếu lưu sản phẩm thất bại
-          }
-        res.status(500).json({ error: 'Failed to upload file.' });
+            // Xóa ảnh đã tải lên nếu có lỗi
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({ error: 'Failed to add product.', details: error });
     }
   },
 
@@ -112,23 +120,14 @@ updateProduct: async (req: any, res: any) => {
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
-        
-        // Nếu có file mới được tải lên, xử lý xóa file cũ và cập nhật đường dẫn file mới
-        let updatedImagePath = product.image; // Mặc định là đường dẫn hình ảnh cũ
+
+        // Xử lý hình ảnh mới nếu được tải lên
+        let updatedImagePath = product.image;
         if (req.file) {
-            // Đường dẫn hình ảnh cũ
             const oldImagePath = path.join(__dirname, '..', '..', product.image);
-
-            // Đường dẫn hình ảnh mới
-            updatedImagePath = req.file.path.replace(/\\/g, '/'); // Chuyển đổi dấu \ sang /
-
-            // Xóa hình ảnh cũ
+            updatedImagePath = req.file.path.replace(/\\/g, '/');
             fs.unlink(oldImagePath, (err) => {
-                if (err) {
-                    console.error('Error deleting old image:', err);
-                } else {
-                    console.log('Old image deleted successfully:', oldImagePath);
-                }
+                if (err) console.error('Error deleting old image:', err);
             });
         }
 
@@ -136,24 +135,20 @@ updateProduct: async (req: any, res: any) => {
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             id,
             {
-                name: req.body.name || product.name, // Cập nhật tên
-                price: req.body.price !== undefined ? req.body.price : product.price, // Cập nhật giá nếu có
-                description: req.body.description || product.description, // Cập nhật mô tả
-                image: updatedImagePath, // Cập nhật đường dẫn hình ảnh
-                category: req.body.category || product.category, // Cập nhật category
+                name: req.body.name || product.name,
+                price: req.body.price !== undefined ? req.body.price : product.price,
+                description: req.body.description || product.description,
+                image: updatedImagePath,
+                category: req.body.category || product.category,
+                stock: req.body.stock !== undefined ? parseInt(req.body.stock, 10) : product.stock, // Cập nhật stock
             },
             { new: true } // Trả về sản phẩm đã được cập nhật
         );
 
-        // Kiểm tra xem sản phẩm đã được cập nhật hay chưa
-        if (!updatedProduct) {
-            return res.status(500).json({ message: 'Failed to update product' });
-        }
-
         res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
     } catch (error) {
         console.error('Error updating product:', error);
-        res.status(500).json({ error: 'Failed to update product' });
+        res.status(500).json({ error: 'Failed to update product.' });
     }
 }
 

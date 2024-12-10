@@ -21,7 +21,19 @@ function CustomCardproduc() {
     const fetchProducts = async () => {
       try {
         const response = await axiosInstance.get('products/getproducts');
-        setProducts(response.data);
+        const allProducts = response.data;
+
+        // Lọc sản phẩm trong 3 tháng qua
+        const currentDate = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(currentDate.getMonth() - 3); // Lấy ngày cách đây 3 tháng
+
+        const filteredProducts = allProducts.filter(product => {
+          const productDate = new Date(product.createdAt);
+          return productDate >= threeMonthsAgo; // Chỉ hiển thị sản phẩm mới trong 3 tháng qua
+        });
+
+        setProducts(filteredProducts);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -31,7 +43,6 @@ function CustomCardproduc() {
 
     fetchProducts();
   }, []);
-  
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -52,19 +63,18 @@ function CustomCardproduc() {
       removeArrowOnDeviceType={["tablet", "mobile"]}
       dotListClass="custom-dot-list-style"
       itemClass="carousel-item-padding-40-px"
-      style={{with:'25px'}}
+      style={{ width: '25px' }}
     >
-      
       {products.map((product) => (
-        <div key={product._id} className="mb-5 ">
+        <div key={product._id} className="mb-5">
           <Link to={`/Productdetail/${product._id}`} className="Card-Link">
-            <Card className="product-card card-hover ">
+            <Card className="product-card card-hover">
               <Card.Img variant="top" src={`http://localhost:4000/${product.image}`} className="" />
-              <Card.Body >
-                <Card.Title style={{ color: 'black',fontSize:'15px' }}>{product.name}</Card.Title>
+              <Card.Body>
+                <Card.Title style={{ color: 'black', fontSize: '15px' }}>{product.name}</Card.Title>
                 <Card.Text style={{ color: "red" }}>
                   Giá bán: <span>{product.price.toLocaleString('vi-VN')} đ</span>
-                  <Card.Img variant="top" src=" https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg" className="pt-2" />
+                  <Card.Img variant="top" src="https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg" className="pt-2" />
                 </Card.Text>
               </Card.Body>
             </Card>

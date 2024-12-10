@@ -91,7 +91,7 @@ const checkout = {
         }
 
         // Tìm sản phẩm trong mảng 'products' bằng cách so sánh với productId
-        const product = order.products.find(p => p.product.toString() === productId); // Sửa 'p._id' thành 'p.product'
+        const product = order.products.find(p => p.product.toString() === productId); 
         if (!product) {
             return res.status(404).send({ message: 'Product not found in the order' });
         }
