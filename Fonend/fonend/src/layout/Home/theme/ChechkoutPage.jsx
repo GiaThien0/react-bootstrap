@@ -94,7 +94,7 @@ function Checkout() {
                         <option value="cash_on_delivery">Thanh toán khi nhận hàng</option>
                     </Form.Control>
                 </Form.Group>
-                <div><h1>{totalAmount}</h1></div>
+                <div><h1>{totalAmount?.toLocaleString()}</h1></div>
                 <Button variant="primary" type="submit">
                     Thanh toán
                 </Button>

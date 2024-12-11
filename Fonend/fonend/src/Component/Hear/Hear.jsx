@@ -2,30 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axiosInstance from '../../utils/aiosConfig';
 import { MdPerson } from 'react-icons/md';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, logout } from '../../redux/authSlice';
 import SearchInput from '../SearchInput/SearchInput';
 import '../Hear/Hear.css';
+import { RootState } from '../../redux/store';
+import axiosInstance from '../../utils/aiosConfig';
 
 const Hear = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.auth.user);
-    const [cartQuantity, setCartQuantity] = useState(0);
+    const user = useSelector((state: RootState) => state.auth.user);
+    const cart = useSelector((state: RootState) => state.cart.items);
 
-    const fetchCart = async () => {
-        if (!user || !user.id) {
-            setCartQuantity(0);
-            return;
-        }
+    const calculateCartQuantity = () => {
+        return cart.reduce((total, item) => total + item.quantity, 0);
+    };
+
+    const handleLogout = async () => {
         try {
-            const response = await axiosInstance.get(`/cart/usercart/${user.id}`);
-            const totalQuantity = response.data.products.reduce((total, item) => total + item.quantity, 0);
-            setCartQuantity(totalQuantity);
+            // API call to log out the user (optional, if necessary)
+            await axiosInstance.post('/auth/logoutUser', {}, { withCredentials: true });
+            Cookies.remove('token');
+            dispatch(logout());
+            window.location.href = '/';
         } catch (error) {
-            console.log(error.response?.data.message || error.message);
+            console.error('Error during logout:', error);
         }
     };
 
@@ -38,7 +41,7 @@ const Hear = () => {
                     id: decodedToken.id,
                     name: decodedToken.name,
                     email: decodedToken.email,
-                    phone:decodedToken.phone,
+                    phone: decodedToken.phone,
                     address: decodedToken.address,
                 }));
             } catch (error) {
@@ -46,21 +49,6 @@ const Hear = () => {
             }
         }
     }, [dispatch]);
-
-    useEffect(() => {
-        fetchCart();
-    }, [user?.id]);
-
-    const handleLogout = async () => {
-        try {
-            await axiosInstance.post('/auth/logoutUser', {}, { withCredentials: true });
-            Cookies.remove('token');
-            dispatch(logout());
-            window.location.href = '/';
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
-    };
 
     return (
         <Container fluid className="green-background">
@@ -76,7 +64,7 @@ const Hear = () => {
                     <Link to="/Card" style={{ textDecoration: 'none' }}>
                         <Button variant="outline-light" className="Hear-2 cart-icon">
                             <i className="bi bi-bag"></i>
-                            <span className="badge">{cartQuantity}</span>
+                            <span className="badge">{calculateCartQuantity()}</span>
                         </Button>
                     </Link>
                     {user ? (
