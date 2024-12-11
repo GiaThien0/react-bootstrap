@@ -13,7 +13,7 @@ const Cardshopping = () => {
 
     const handleCheckout = () => {
         const totalAmount = calculateTotal();
-        const products = cart.map(item => ({ id: item.product.id, quantity: item.quantity }));
+        const products = cart.map(item => ({ _id: item.product._id, quantity: item.quantity }));
         navigate('/checkout', { state: { totalAmount, products } });
     };
 
@@ -38,17 +38,17 @@ const Cardshopping = () => {
                 <tbody>
                     {cart.length > 0 ? (
                         cart.map(item => (
-                            <tr key={item.product.id}>
+                            <tr key={item.product._id}>
                                 <td className='text-center' style={{ width: '20rem' }}>
                                     <Image src={`http://localhost:4000/${item.product.image}`} fluid style={{ width: '50%' }} />
                                 </td>
                                 <td className='text-center p-5'>{item.product.name}</td>
                                 <td className='text-center p-5'>{item.quantity}</td>
                                 <td className='text-center p-5'>
-                                    <Button type="button" onClick={() => dispatch(increaseItemQuantity(item.product.id))}>+</Button>
+                                    <Button type="button" onClick={() => dispatch(increaseItemQuantity(item.product._id))}>+</Button>
                                 </td>
                                 <td className='text-center p-5'>
-                                    <Button type="button" onClick={() => dispatch(decreaseItemQuantity(item.product.id))}>-</Button>
+                                    <Button type="button" onClick={() => dispatch(decreaseItemQuantity(item.product._id))}>-</Button>
                                 </td>
                                 <td className='text-center p-5'>
                                     {item.product.price ? item.product.price.toLocaleString() : 'N/A'} VND

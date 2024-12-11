@@ -1,53 +1,49 @@
-/* Đặt chiều cao và kiểu dáng cho toàn bộ form tìm kiếm */
+/* Điều chỉnh kích thước form tìm kiếm */
 .search-form {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  /* Điều chỉnh InputGroup để có không gian thoáng hơn */
-  .search-input-group {
-    position: relative;
-    width: 100%;
-    border-radius: 30px; /* Tạo góc bo tròn cho các phần tử */
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm bóng mờ */
-  }
-  
-  /* Tùy chỉnh Form.Control */
-  .search-input-group .form-control {
-    border-radius: 30px; /* Bo tròn cho ô input */
-    padding: 12px 20px; /* Tăng khoảng cách trong input */
-    font-size: 16px;
-    transition: all 0.3s ease-in-out;
-  }
-  
-  /* Tùy chỉnh khi focus vào input */
-  .search-input-group .form-control:focus {
-    border-color: #e63946; /* Đổi màu viền khi focus */
-    box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25); /* Thêm bóng ánh sáng khi focus */
-  }
-  
-  /* Tùy chỉnh cho button */
-  .search-button {
-    border-radius: 30px; /* Bo tròn cho nút */
-    padding: 12px 20px; /* Tăng kích thước nút */
-    font-size: 16px;
-    transition: all 0.3s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .search-button i {
-    font-size: 20px; /* Tùy chỉnh kích thước icon */
-  }
-  
-  .search-button:hover {
-    background-color: #d62828; /* Màu nền nút khi hover */
-    border-color: #d62828;
-  }
-  
-  .search-button:focus {
-    outline: none; /* Loại bỏ viền focus */
-  }
-  
+  margin: 0 auto;
+  max-width: 500px; /* Giới hạn chiều rộng form */
+}
+
+/* Điều chỉnh InputGroup để có không gian thoáng hơn */
+.search-input-group {
+  position: relative;
+  width: 100%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Thêm bóng mờ */
+}
+
+/* Tùy chỉnh Form.Control */
+.search-input-group .form-control {
+  padding: 8px 12px; /* Giảm khoảng cách trong input */
+  font-size: 14px; /* Giảm kích thước chữ trong input */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Tùy chỉnh khi focus vào input */
+.search-input-group .form-control:focus {
+  border-color: #e63946; /* Đổi màu viền khi focus */
+  box-shadow: 0 0 0 0.25rem rgba(230, 57, 70, 0.25); /* Thêm bóng ánh sáng khi focus */
+}
+
+/* Tùy chỉnh cho button */
+.search-button {
+  border-radius: 25px; /* Bo tròn cho nút */
+  padding: 8px 14px; /* Giảm kích thước nút */
+  font-size: 14px; /* Giảm kích thước chữ */
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button i {
+  font-size: 18px; /* Tùy chỉnh kích thước icon */
+}
+
+.search-button:hover {
+  background-color: #d62828; /* Màu nền nút khi hover */
+  border-color: #d62828;
+}
+
+.search-button:focus {
+  outline: none; /* Loại bỏ viền focus */
+}
