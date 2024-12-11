@@ -1,27 +1,24 @@
 import express from 'express';
-import authController from '../controller/userController';
 import usermiddleware from '../middleware/usermiddleware';
+import authController from '../controller/userController';
 
 const router = express.Router();
 
-// Định nghĩa route cho đăng ký
+// Các route không yêu cầu xác thực
 router.post("/register", authController.registerUser);
-
-router.post("/loginUser" , authController.loginUser);
-
-router.post("/logoutUser",authController.logoutUser)
-router.post("/addUser",authController.addUser)
-router.get("/readusers" , authController.readusers)
-router.delete("/deleteuser/:id",authController.deleteuser)
-router.put("/updateuser/:id",authController.updateUser)
-router.get('/adm/userdata', usermiddleware.authenticateToken, usermiddleware.getdatalogin);
-router.put('/Userupdate/:id', authController.Userupdate);
-
-// Route yêu cầu khôi phục mật khẩu
-router.post('/forgot-password', authController.forgotPassword);
-
-// Route để đặt lại mật khẩu
-router.post('/reset-password', authController.resetPassword);
+router.post("/loginUser", authController.loginUser);
+router.post("/forgot-password", authController.forgotPassword);
+router.post("/reset-password", authController.resetPassword);
 router.get('/verify-email', authController.verifyemail);
 
+// Đặt middleware xác thực cho tất cả các route cần xác thực
+
+// Các route yêu cầu xác thực
+router.post("/logoutUser", authController.logoutUser);
+router.post("/addUser", authController.addUser);
+router.get("/readusers", authController.readusers);
+router.delete("/deleteuser/:id", authController.deleteuser);
+router.put("/updateuser/:id", authController.updateUser);
+router.get('/adm/userdata', usermiddleware.getdatalogin);
+router.put('/Userupdate/:id', authController.Userupdate);
 export default router;

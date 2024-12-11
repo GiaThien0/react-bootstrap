@@ -1,43 +1,38 @@
-import axiosInstance from '../../../../src/utils/aiosConfig';
+import React, { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import logo from '../../../Component/assets/logo.webp';
 import { Link } from 'react-router-dom';
 import Socialogin from '../../../Component/Socialogin';
-import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../../redux/authSlice';
+import axiosInstance from '../../../utils/aiosConfig';
 
 const Login = () => {
     const [loginData, setLoginData] = useState({ email: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setErrorMessage('');
         setIsLoading(true);
-    
-        try {
-            const response = await axiosInstance.post('/auth/loginUser', loginData,{ withCredentials: true });
-    
-            if (response.status === 200) {
-               
-               
-                const role = response.data.user.role;
 
-                if (role === 'admin') {
-                   
-                        window.location.href = 'http://localhost:3001/adm'; // Chuyển đến trang quản lý admin
-                   
+        try {
+            const response = await axiosInstance.post('/auth/loginUser', loginData, { withCredentials: true });
+
+            if (response.status === 200) {
+                const user = response.data.user;
+                dispatch(loginSuccess(user));
+
+                if (user.role === 'admin') {
+                    window.location.href = 'http://localhost:3001/adm'; // Chuyển đến trang quản lý admin
                 } else {
                     window.location.href = '/'; // Chuyển đến trang quản lý người dùng
                 }
             }
-              
-                
-            
-        }
-         catch (error) {
+        } catch (error) {
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';
-
             setErrorMessage(message);
         } finally {
             setIsLoading(false);

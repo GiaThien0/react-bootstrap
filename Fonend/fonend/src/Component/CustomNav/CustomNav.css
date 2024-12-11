@@ -49,5 +49,20 @@
       font-size: 1rem; /* Giảm kích thước chữ khi trên màn hình nhỏ */
       margin: 8px 0;
     }
-  }
+  }/* Tùy chỉnh các liên kết trong Navbar */
+.navbar-links .navbar-item {
+  color: #333; /* Màu chữ tối cho các link */
+  font-size: 1rem; /* Giảm kích thước chữ của các link */
+  padding: 6px 12px; /* Giảm padding của các link */
+  text-transform: uppercase; /* Chữ in hoa */
+  transition: all 0.3s ease, transform 0.2s ease; /* Hiệu ứng chuyển động mượt mà */
+}
+
+.navbar-links .navbar-item:hover {
+  color: #e60000; /* Màu chữ đỏ khi hover */
+  background-color: rgba(255, 0, 0, 0.1); /* Nền đỏ nhẹ khi hover */
+  border-radius: 4px; /* Bo góc cho các link khi hover */
+  transform: translateY(-5px); /* Nhảy lên khi hover */
+}
+
   

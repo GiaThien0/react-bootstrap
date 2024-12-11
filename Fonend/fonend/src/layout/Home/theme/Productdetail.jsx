@@ -2,84 +2,64 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Image, Card, Button } from 'react-bootstrap';
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import { useNavigate, useParams } from 'react-router-dom';
-import axiosInstance from '../../../utils/aiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../../../redux/productSlice'; // Đảm bảo sử dụng đúng đường dẫn
+import { addItem } from '../../../redux/cartSlice'; // Đảm bảo sử dụng đúng đường dẫn
+import { RootState } from '../../../redux/store'; // Đảm bảo sử dụng đúng đường dẫn
 import './Productdetail.css';
 import Review from '../../../Component/comment/Review';
 
-function Productdetail() {
+const Productdetail = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [email, setEmail] = useState(null);
-  const [message, setmessage] = useState(null);
-  const [address, setaddress] = useState(null);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  
+  const products = useSelector((state: RootState) => state.products.products);
+  const productStatus = useSelector((state: RootState) => state.products.status);
+  const productError = useSelector((state: RootState) => state.products.error);
 
-  const fetchProduct = async () => {
-    try {
-      const response = await axiosInstance.get(`products/getproducts/${id}`);
-      setProduct(response.data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const user = useSelector((state: RootState) => state.auth.user); // Lấy thông tin người dùng từ Redux store
 
-  const fetchUserData = async () => {
-    try {
-      const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-      const { id, email ,address} = response.data.user;
-      setUserId(id);
-      setEmail(email);
-      setaddress(address)
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
+  const [quantity, setQuantity] = useState(1);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    fetchProduct();
-    fetchUserData();
-  }, [id]);
+    if (productStatus === 'idle') {
+      dispatch(fetchProducts());
+    }
+  }, [productStatus, dispatch]);
 
-  const addToCart = async () => {
-    if (!userId) {
-      setmessage('ban chua dang nhap')
+  useEffect(() => {
+    console.log('Products:', products);
+    console.log('User:', user); // Kiểm tra thông tin người dùng
+  }, [products, user]);
+
+  const product = products.find(product => product._id === id);
+
+  const addToCart = () => {
+    if (!user) {
+      setMessage('Bạn chưa đăng nhập');
       return;
     }
 
-    try {
-      const response = await axiosInstance.post('cart/addcart', {
-        userId,
-        productId: id,
-        quantity,
-      });
-      console.log(response.data.message);
-      console.log(response.data.cart);
+    if (product) {
+      dispatch(addItem({ product, quantity }));
       navigate('/Card');
-    } catch (error) {
-      console.error('Error adding product to cart:', error.response?.data?.message || error.message);
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (productStatus === 'loading') return <p>Loading...</p>;
+  if (productStatus === 'failed') return <p>Error: {productError}</p>;
   if (!product) return <p>Product not found</p>;
 
   return (
     <Container className='mt-5'>
       <Row>
-        <Col md={7} >
-          <div className='card-hover text-center '>
+        <Col md={7}>
+          <div className='card-hover text-center'>
             <Image src={`http://localhost:4000/${product.image}`} alt="Product Image" fluid />
           </div>
         </Col>
-
         <Col md={5}>
           <Card.Text className='fs-2'>{product.name}</Card.Text>
           <div className='d-flex'>
@@ -90,50 +70,44 @@ function Productdetail() {
             <p style={{ color: 'Silver' }}> Sản phẩm còn lại {product.stock}</p>
           </div>
           <Card.Text>{product.description}</Card.Text>
-          <h2 style={{ color: 'red' }} className='mt-2'>
-            <span className="fw-bold underline">{product.price.toLocaleString('vi-VN')} đ</span>
-          </h2>
+          <Card.Text style={{ fontSize: '25px' }}>Giá bán là: <span style={{ color: 'red' }}>{product.price.toLocaleString('vi-VN')}</span></Card.Text>
           <div className='d-flex gap-3'>
-            <p>Giao đến <span className="fw-bold">{address|| "Địa chỉ chưa có"}</span></p>
-            <a href="/">Giao đến</a>
+            <p>Giao đến <span className="fw-bold">{user?.address || "Bạn chưa lưu địa chỉ cần đăng nhập vào thông tin để thêm"}</span></p> {/* Hiển thị địa chỉ từ Redux store */}
           </div>
           <hr />
           <p>Số lượng</p>
           <div className='d-flex gap-2 justify-content-center' style={{ backgroundColor: '#EEEEEE' }}>
-  <Button 
-    className='custom-button' 
-    onClick={() => setQuantity(prevQuantity => prevQuantity < product.stock ? prevQuantity + 1 : product.stock)}
-  >
-    +
-  </Button>
-  <div>
-    <p style={{ paddingTop: '20px' }}>{quantity}</p>
-  </div>
-  <Button 
-    className='custom-button' 
-    onClick={() => setQuantity(prevQuantity => prevQuantity > 1 ? prevQuantity - 1 : 1)}
-  >
-    -
-  </Button>
-</div>
+            <Button 
+              className='custom-button' 
+              onClick={() => setQuantity(prevQuantity => prevQuantity < product.stock ? prevQuantity + 1 : product.stock)}
+            >
+              +
+            </Button>
+            <div>
+              <p style={{ paddingTop: '20px' }}>{quantity}</p>
+            </div>
+            <Button 
+              className='custom-button' 
+              onClick={() => setQuantity(prevQuantity => prevQuantity > 1 ? prevQuantity - 1 : 1)}
+            >
+              -
+            </Button>
+          </div>
           <hr />
           <div className='d-flex gap-5'>
             <Button className='w-50 custom-buttonred' onClick={addToCart}>Chọn mua</Button>
-
             <Button className='w-50 custom-buttonblue'>Mua trả sau</Button>
           </div>
           {message && <div className="mt-3 alert alert-info">{message}</div>}
-
         </Col>
       </Row>
-
       <Row>
         <Col md={7}>
-          <Review email={email} userId={userId} productId={product._id}  />
+          <Review email={user?.email} userId={user?.id} productId={product._id} /> {/* Sửa lại để sử dụng _id */}
         </Col>
       </Row>
     </Container>
   );
-}
+};
 
 export default Productdetail;

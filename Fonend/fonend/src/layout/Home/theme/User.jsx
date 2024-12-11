@@ -1,59 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axiosInstance from '../../../utils/aiosConfig';
+import {jwtDecode} from 'jwt-decode';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUser } from '../../../redux/authSlice';
 
-function User() {
-    const [userId, setUserId] = useState(null);
-    const [email, setemail] = useState(null);
-
+const User = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const [userId, setUserId] = useState(user?.id);
+  const [email, setEmail] = useState(user?.email || '');
   const [userData, setUserData] = useState({
-    name: '',
-    address: '',
-    phone: '',  // Giữ lại trường phone
+    name: user?.name || '',
+    address: user?.address || '',
+    phone: user?.phone || '',
   });
 
-  // Fetch thông tin người dùng từ API
-  const fetchUserData = async () => {
-    try {
-      const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-      console.log('API response:', response.data);  // Kiểm tra phản hồi từ API
-
-      const { name, address, phone,id,email } = response.data.user;  // Giả sử API trả về name, address và phone
-      setUserId(id);
-      setemail(email)
-      setUserData({
-        name,
-        address,
-        phone,
-      
-      });
-
-
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
-  };
-
+  // Fetch thông tin người dùng khi component render
   useEffect(() => {
-    console.log()
-    fetchUserData();
-  }, []);  // Lần đầu tiên khi component render
+    const token = Cookies.get('token');
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setUserId(decodedToken.id);
+        setEmail(decodedToken.email || '');
+        setUserData({
+          name: decodedToken.name || '',
+          address: decodedToken.address || '',
+          phone: decodedToken.phone || '',
+        });
+      } catch (error) {
+        console.error('Token không hợp lệ hoặc đã hết hạn', error);
+      }
+    } else {
+      console.error('Token không tồn tại');
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userId) {
       console.error('User ID is missing');
+      alert('Vui lòng đăng nhập lại');
       return;
     }
+
     try {
-      await axiosInstance.put(`/auth/Userupdate/${userId}`, userData);  // Gửi PUT request với userId
+      const response = await axiosInstance.put(`/auth/Userupdate/${userId}`, userData);
+      const { accessToken } = response.data;
+
+      if (accessToken) {
+        Cookies.set('token', accessToken, { expires: 7 });
+        localStorage.setItem('token', accessToken);
+      }
+
+      setUserData({
+        name: response.data.name || userData.name,
+        address: response.data.address || userData.address,
+        phone: response.data.phone || userData.phone,
+      });
+
+      dispatch(updateUser({
+        name: response.data.name || userData.name,
+        email,
+        address: response.data.address || userData.address,
+        phone: response.data.phone || userData.phone,
+      }));
+
       alert('Thông tin người dùng đã được cập nhật!');
     } catch (error) {
-      console.error('Error updating user data:', error);
+      console.error('Lỗi khi cập nhật thông tin người dùng:', error);
     }
   };
 
@@ -64,16 +86,17 @@ function User() {
           <h2>Chỉnh sửa thông tin người dùng</h2>
 
           <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formEmail">
+            <Form.Group controlId="formEmail">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Nhập email"
                 name="email"
                 value={email}
-                readOnly // Làm cho ô input này chỉ có thể xem, không thể chỉnh sửa
+                readOnly
               />
             </Form.Group>
+
             <Form.Group controlId="formName">
               <Form.Label>Tên</Form.Label>
               <Form.Control
@@ -85,8 +108,6 @@ function User() {
               />
             </Form.Group>
 
-            {/* Bỏ qua email trong form */}
-            
             <Form.Group controlId="formAddress">
               <Form.Label>Địa chỉ</Form.Label>
               <Form.Control

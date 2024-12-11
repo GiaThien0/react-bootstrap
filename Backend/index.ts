@@ -19,25 +19,24 @@ import autheRouter from './src/router/user'
 
 const app = express();
 const port = process.env.PORT || 5000;
-
+app.use(cookieParser());
 connectDB()
 
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Mảng chứa các origin
- 
-  credentials: true
+  origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow client & admin origins
+  credentials: true,  // Allow credentials (cookies)
+  allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
 }));
-app.use(cookieParser());
 
 app.use(bodyParser.json({ limit: '10mb' })); // Tăng giới hạn kích thước
-
 app.use(express.json());
 app.use('/api',userRoute)
+app.use("/v1/auth", autheRouter);
 
 app.use('/uploads', express.static('uploads'));
-
-//router
 app.use("/v1/auth", autheRouter);
+//router
+
 app.use("/v1/products",productsRoute );
 app.use("/v1/category",categoryRoute);
 app.use("/v1/cart",cart);

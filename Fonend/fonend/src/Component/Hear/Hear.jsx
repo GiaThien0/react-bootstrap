@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
-import '../Hear/Hear.css';
-import SearchInput from '../SearchInput/SearchInput';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie'; // Import thư viện js-cookie
+import Cookies from 'js-cookie';
 import axiosInstance from '../../utils/aiosConfig';
 import { MdPerson } from 'react-icons/md';
+import {jwtDecode} from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, logout } from '../../redux/authSlice';
+import SearchInput from '../SearchInput/SearchInput';
+import '../Hear/Hear.css';
 
-function Hear() {
-    const [userName, setUserName] = useState('');
-    const [useremail, setUseremail] = useState('');
-    const [cartQuantity, setCartQuantity] = useState(0); // Thêm state để lưu số lượng sản phẩm trong giỏ hàng
-    const [id, setId] = useState('');
+const Hear = () => {
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+    const [cartQuantity, setCartQuantity] = useState(0);
 
-    // Hàm lấy giỏ hàng
     const fetchCart = async () => {
-        if (!id) {
-            setCartQuantity(0); // Nếu không có userId, đặt số lượng giỏ hàng là 0
+        if (!user || !user.id) {
+            setCartQuantity(0);
             return;
         }
-
         try {
-            const response = await axiosInstance.get(`/cart/usercart/${id}`);
-            
-            // Tính tổng số lượng sản phẩm trong giỏ hàng
+            const response = await axiosInstance.get(`/cart/usercart/${user.id}`);
             const totalQuantity = response.data.products.reduce((total, item) => total + item.quantity, 0);
             setCartQuantity(totalQuantity);
         } catch (error) {
@@ -31,31 +29,33 @@ function Hear() {
         }
     };
 
-    // Hàm lấy dữ liệu người dùng
-    const fetchUserData = async () => {
-        try {
-            const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-            const { name, email, id } = response.data.user;
-            setUserName(name);
-            setUseremail(email);
-            setId(id);
-        } catch (error) {
-            console.error('Error fetching user data:', error);
+    useEffect(() => {
+        const token = Cookies.get('token');
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                dispatch(loginSuccess({
+                    id: decodedToken.id,
+                    name: decodedToken.name,
+                    email: decodedToken.email,
+                    phone:decodedToken.phone,
+                    address: decodedToken.address,
+                }));
+            } catch (error) {
+                console.error('Invalid or expired token', error);
+            }
         }
-    };
+    }, [dispatch]);
 
     useEffect(() => {
         fetchCart();
-        fetchUserData();
-    }, [id]); // Khi id thay đổi, sẽ gọi lại API để cập nhật giỏ hàng
+    }, [user?.id]);
 
     const handleLogout = async () => {
         try {
             await axiosInstance.post('/auth/logoutUser', {}, { withCredentials: true });
-            localStorage.removeItem('username');
-            localStorage.removeItem('userId');
-            localStorage.removeItem('role');
             Cookies.remove('token');
+            dispatch(logout());
             window.location.href = '/';
         } catch (error) {
             console.error('Error during logout:', error);
@@ -66,7 +66,7 @@ function Hear() {
         <Container fluid className="green-background">
             <Row className="Hear-1">
                 <Col md={3} className="text-center pt-2">
-                    <span><i className="bi bi-envelope">{useremail}</i></span>/ 
+                    <span><i className="bi bi-envelope">{user?.email}</i></span> /
                     <span><i className="bi bi-house"></i>Trang chủ</span>
                 </Col>
                 <Col md={6}>
@@ -76,15 +76,14 @@ function Hear() {
                     <Link to="/Card" style={{ textDecoration: 'none' }}>
                         <Button variant="outline-light" className="Hear-2 cart-icon">
                             <i className="bi bi-bag"></i>
-                            <span className="badge">{cartQuantity}</span> {/* Hiển thị số lượng sản phẩm trong giỏ hàng */}
+                            <span className="badge">{cartQuantity}</span>
                         </Button>
                     </Link>
-                    {userName ? (
+                    {user ? (
                         <Dropdown>
                             <Dropdown.Toggle variant="danger" id="dropdown-basic">
-                                <span>{userName}</span>
+                                <span>{user.name}</span>
                             </Dropdown.Toggle>
-
                             <Dropdown.Menu>
                                 <Dropdown.Item href="/User">
                                     <Button variant="outline-Secondary" className="Hear-2">
@@ -92,7 +91,6 @@ function Hear() {
                                         <span>Thông tin của bạn</span>
                                     </Button>
                                 </Dropdown.Item>
-
                                 <Dropdown.Item href="#/action-2">
                                     <Button variant="outline-Secondary" className="Hear-2" onClick={handleLogout}>
                                         <i className="bi bi-box-arrow-right me-1"></i>

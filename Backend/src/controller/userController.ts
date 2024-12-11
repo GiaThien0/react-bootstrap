@@ -102,15 +102,17 @@ const authController = {
 
     // Thiết lập cookie với token
     res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // Đảm bảo chỉ sử dụng cookie qua HTTPS trong production
-        maxAge: 3600000  // 1 giờ
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',    
+            maxAge: 3600000  // 1 giờ
     });
 
     // Phản hồi thành công, không cần trả token trong body nếu đã sử dụng cookie
     res.status(200).json({
         message: "Login successful",
-        user: { id: user._id, name: user.name, role: user.role, address: user.address,phone : user.phone }
+        user: { id: user._id, name: user.name, role: user.role, address: user.address,phone : user.phone },
+        token: token // Thêm token vào body (tùy chọn, không cần thiết nếu dùng cookie)
+
     });
 
 } catch (err:any) {
@@ -236,29 +238,38 @@ const authController = {
         try {
             const { id } = req.params;  // Lấy id từ URL params
             const { name, address, phone } = req.body;
-        
+    
             // Tìm người dùng trong cơ sở dữ liệu theo id
             const user = await User.findById(id);  // Sử dụng id từ params, không phải từ body
-        
+    
             if (!user) {
-              return res.status(404).json({ message: 'Người dùng không tồn tại' });
+                return res.status(404).json({ message: 'Người dùng không tồn tại' });
             }
-        
+    
             // Cập nhật thông tin người dùng
             user.name = name || user.name;
             user.address = address || user.address;
             user.phone = phone || user.phone;
-        
+    
+            // Lưu thông tin đã được cập nhật vào cơ sở dữ liệu
             await user.save();
-        
+    
+            // Tạo JWT mới với thông tin người dùng đã cập nhật
+            const newAccessToken = jwt.sign(
+                { id: user._id, name: user.name, address: user.address, phone: user.phone }, 
+                process.env.jwt_ac!, 
+                { expiresIn: '1h' }
+            );
+    
             return res.status(200).json({
-              message: 'Thông tin người dùng đã được cập nhật',
-              user,
+                message: 'Thông tin người dùng đã được cập nhật',
+                user,  // Trả về thông tin đã được cập nhật
+                accessToken: newAccessToken,  // Trả về access token mới
             });
-          } catch (error) {
+        } catch (error) {
             console.error('Error updating user data:', error);
             return res.status(500).json({ message: 'Đã có lỗi xảy ra' });
-          }
+        }
     },
 
 

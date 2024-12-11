@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image:url(Component/assets/BGNoel-1920x1080.webp) ;
+  /* background-image:url(Component/assets/BGNoel-1920x1080.webp) ; */
 }
 
 code {
