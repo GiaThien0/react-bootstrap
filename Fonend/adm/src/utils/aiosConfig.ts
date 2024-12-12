@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 
 // Interceptors (tuỳ chọn)
 axiosInstance.interceptors.request.use(
-    (config :any) => {
+    (config: any) => {
         // Thêm token vào headers nếu có
         const token = localStorage.getItem('token'); // Lấy token từ localStorage
         if (token) {
@@ -16,19 +16,31 @@ axiosInstance.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
+    (error: any) => {
         // Xử lý lỗi request
+        console.error('Request Error:', error);
         return Promise.reject(error);
     }
 );
 
 axiosInstance.interceptors.response.use(
-    (response) => {
+    (response: any) => {
         // Xử lý dữ liệu phản hồi
         return response;
     },
-    (error) => {
+    (error: any) => {
         // Xử lý lỗi phản hồi
+        console.error('Response Error:', error);
+        if (error.response) {
+            // Lỗi do server phản hồi (có mã trạng thái)
+            console.error('Server Response:', error.response.data);
+        } else if (error.request) {
+            // Lỗi do không nhận được phản hồi
+            console.error('No response received:', error.request);
+        } else {
+            // Lỗi trong quá trình thiết lập request
+            console.error('Request Setup Error:', error.message);
+        }
         return Promise.reject(error);
     }
 );

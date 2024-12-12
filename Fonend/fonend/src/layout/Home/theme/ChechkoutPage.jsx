@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Form, Button, Row, Table, Image } from 'react-bootstrap';
-import axiosInstance from '../../../utils/aiosConfig';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux'; // Import useSelector để lấy dữ liệu từ Redux store
-import { RootState } from '../../../redux/store'; // Import RootState để sử dụng trong useSelector
+import axiosInstance from '../../../utils/aiosConfig';
 
-function Checkout() {
-    const navigate = useNavigate(); 
+const Checkout = () => {
+    const navigate = useNavigate();
     const location = useLocation();
 
     // Lấy thông tin người dùng từ Redux store
-    const user = useSelector((state: RootState) => state.auth.user);
-    const cart = useSelector((state: RootState) => state.cart);
+    const user = useSelector((state) => state.auth.user);
+    const cart = useSelector((state) => state.cart);
 
-    // Khai báo state cho totalAmount, products và userId
+    // Khai báo state cho totalAmount, phone, address và paymentMethod
     const [totalAmount, setTotalAmount] = useState(null);
     const [phone, setPhone] = useState(user?.phone || '');
     const [address, setAddress] = useState(user?.address || '');
-    const [paymentMethod, setPaymentMethod] = useState('credit_card'); // Phương thức thanh toán mặc định
+    const [paymentMethod, setPaymentMethod] = useState('vnpay'); // Phương thức thanh toán mặc định là VNPAY
 
     useEffect(() => {
         if (location.state) {
@@ -25,34 +24,36 @@ function Checkout() {
             setTotalAmount(totalAmount);
         } else {
             // Nếu location.state là null, hiển thị thông báo và quay về trang chính
-            alert('Bạn chưa đang nhập.');
+            alert('Bạn chưa đăng nhập.');
             navigate('/'); // Chuyển hướng về trang chính
         }
-    }, [location.state, navigate]); 
+    }, [location.state, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         // Kiểm tra thông tin thanh toán trước khi gửi
         if (!totalAmount || !user || !cart.items.length || !phone || !address) {
             alert('Thông tin thanh toán không đầy đủ.');
             return;
         }
-    
-        const orderData = {
-            totalAmount: totalAmount,
-            paymentMethod,
-            phone,
-            address,
-            products: cart.items, // Lấy sản phẩm từ Redux store
-        };
-        console.log(orderData); 
-    
+
         try {
-            const response = await axiosInstance.post(`/order/checkout/${user.id}`, orderData);
-            alert(response.data.message); // Thông báo thành công
-            // Chuyển hướng người dùng đến trang khác sau khi thanh toán thành công
-            navigate('/'); // Thay đổi từ history.push thành navigate
+            const response = await axiosInstance.post(`/order/checkout/${user.id}`, {
+                totalAmount,
+                paymentMethod,
+                phone,
+                address,
+                products: cart.items, // Lấy sản phẩm từ Redux store
+            });
+
+            if (paymentMethod === 'cash_on_delivery') {
+                // Chuyển hướng tới trang thanh toán thành công khi chọn "Thanh toán khi nhận hàng"
+                navigate('/payment-success');
+            } else {
+                // Chuyển hướng tới trang thanh toán của VNPAY hoặc phương thức khác
+                window.location.href = response.data.paymentUrl;
+            }
         } catch (error) {
             alert(error.response?.data.message || error.message); // Thông báo lỗi
         }
@@ -89,6 +90,7 @@ function Checkout() {
                         value={paymentMethod}
                         onChange={(e) => setPaymentMethod(e.target.value)}
                     >
+                        <option value="vnpay">VNPAY</option>
                         <option value="credit_card">Thẻ tín dụng</option>
                         <option value="paypal">PayPal</option>
                         <option value="cash_on_delivery">Thanh toán khi nhận hàng</option>
@@ -96,7 +98,7 @@ function Checkout() {
                 </Form.Group>
                 <div><h1>{totalAmount?.toLocaleString()}</h1></div>
                 <Button variant="primary" type="submit">
-                    Thanh toán
+                    Tiếp Tục
                 </Button>
             </Form>
             <Row className='pt-5'>
@@ -125,6 +127,6 @@ function Checkout() {
             </Row>
         </Container>
     );
-}
+};
 
 export default Checkout;

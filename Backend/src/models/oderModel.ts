@@ -18,12 +18,12 @@ const OrderSchema = new Schema({
                 type: Number,
                 required: true,
                 default: 1, // Mặc định là 1
-            },isApproved: {
+            },
+            isApproved: {
                 type: Boolean,
                 default: false, // Mặc định sản phẩm chưa được duyệt
-              },
+            },
         },
-        
     ],
     status: {
         type: String,
@@ -32,7 +32,7 @@ const OrderSchema = new Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['credit_card', 'paypal', 'cash_on_delivery'],
+        enum: ['vnpay', 'credit_card', 'paypal', 'cash_on_delivery'], // Bao gồm vnpay
         required: true, // Bắt buộc chọn phương thức thanh toán
     },
     paymentStatus: {
@@ -48,7 +48,6 @@ const OrderSchema = new Schema({
         type: String,
         required: true,
     },
-    
     totalAmount: {
         type: Number,
         required: true,

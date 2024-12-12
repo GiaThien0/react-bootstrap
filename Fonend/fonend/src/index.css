@@ -71,7 +71,20 @@ h2 {
 
 .contact-form button:hover {
   background-color: #0056b3;
+}.carousel-caption-custom {
+  background-color: rgba(0, 0, 0, 0.6); /* Màu nền đen với độ trong suốt */
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
 }
+
+.carousel-caption-custom p {
+  color: #ffffff; /* Màu trắng cho văn bản */
+  font-size: 1.2em; /* Tăng kích thước chữ */
+  line-height: 1.5; /* Tăng khoảng cách giữa các dòng */
+  margin: 0;
+}
+
 
 
 

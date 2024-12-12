@@ -1,53 +1,47 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-import image6 from '../assets/slide-acer.jpg';
-import image4 from '../assets/sildew.jpg';
-import image3 from '../assets/sildeweb2.jpg';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBanners } from '../../redux/BannerSlice';
 import { Container } from 'react-bootstrap';
-
+import { Link } from 'react-router-dom';
 
 function CustomCarousels() {
+  const dispatch = useDispatch();
+  const { banners, loading, error } = useSelector(state => state.banners);
+
+  useEffect(() => {
+    dispatch(fetchBanners());
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log('Banners:', headerBanners);
+  }, [banners]);
+
+  const headerBanners = banners.filter(banner => banner.position === 'heart' && banner.section.toLowerCase() === 'trang chủ');
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <Container>
-    <Carousel>
-    <Carousel.Item>
-      <img
-        className="d-block w-100"
-        src={image6}
-        alt="First slide"
-        style={{ height: '500px',width:'20px', objectFit: 'cover' }}
-      />
-      <Carousel.Caption>
-        <h3>Điện thoại thông minh</h3>
-        <p>sam sum galasi s100</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item>
-      <img
-        className="d-block w-100"
-        src={image4}
-        alt="Second slide"
-        style={{ height: '500px', objectFit: 'cover' }}
-      />
-      <Carousel.Caption>
-      <h3>Điện thoại thông minh</h3>
-      <p>sam sum galasi s100</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-    <Carousel.Item>
-      <img
-        className="d-block w-100"
-        src={image3}
-        alt="Third slide"
-        style={{ height: '500px', objectFit: 'cover' }}
-      />
-      <Carousel.Caption>
-      <h3>Điện thoại thông minh</h3>
-      <p>sam sum galasi s100</p>
-      </Carousel.Caption>
-    </Carousel.Item>
-  </Carousel>
-  </Container>
+      <Carousel>
+        {headerBanners.map((banner, index) => (
+          <Carousel.Item key={banner._id}>
+            <Link to={banner.link}>
+              <img
+                className="d-block w-100"
+                src={`http://localhost:4000/${banner.imageUrl}`}
+                alt={`Slide ${index + 1}`}
+                style={{ height: 'auto', objectFit: 'cover' }}
+              />
+            </Link>
+            <Carousel.Caption className="carousel-caption-custom">
+              <p style={{ whiteSpace: 'pre-wrap' }}>{banner.description}</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        ))}
+      </Carousel>
+    </Container>
   );
 }
 

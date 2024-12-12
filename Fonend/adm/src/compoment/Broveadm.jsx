@@ -1,30 +1,38 @@
 import { useEffect } from 'react';
-import axiosInstance from '../utils/aiosConfig';
+import Cookies from 'js-cookie'; // Import js-cookie
+import { jwtDecode } from 'jwt-decode';
 
-function Broveadm({ setUserName, setUserRole,setLoading }) {
+function Broveadm({ setUserName, setUserRole, setLoading }) {
 
     useEffect(() => {
         setLoading(true);
 
-        const fetchUserData = async () => {
+        const fetchUserDataFromCookie = () => {
             try {
-                const response = await axiosInstance.get('/auth/adm/userdata', { withCredentials: true });
-                const { name, role } = response.data.user;
-                setUserName(name);
-                setUserRole(role);
+                // Lấy 'token' từ cookie
+                const token = Cookies.get('token');
                 
+                if (token) {
+                    // Giải mã token nếu có
+                    const decodedToken = jwtDecode(token); // Giải mã JWT token
+
+                    // Cập nhật state với thông tin người dùng từ token
+                    setUserName(decodedToken.name); // Giả sử token chứa 'name'
+                    setUserRole(decodedToken.role); // Giả sử token chứa 'role'
+                } else {
+                    console.error('No user data found in cookies');
+                    // Xử lý trường hợp không có cookie (ví dụ: chuyển hướng người dùng về trang đăng nhập)
+                    window.location.href = '/login';
+                }
             } catch (error) {
-                console.error('Error fetching user data:', error);
-            
-                // Nếu lỗi 401, chuyển hướng về trang đăng nhập
-                
+                console.error('Error fetching user data from cookies:', error);
             } finally {
                 setLoading(false); // Hoàn tất tải
             }
         };
-            
-        fetchUserData();
-    }, [setUserName, setUserRole,setLoading]); // Gọi lại khi hàm setUserName và setUserRole thay đổi
+
+        fetchUserDataFromCookie();
+    }, [setUserName, setUserRole, setLoading]); // Gọi lại khi hàm setUserName và setUserRole thay đổi
 
     return null; // Không render gì
 }

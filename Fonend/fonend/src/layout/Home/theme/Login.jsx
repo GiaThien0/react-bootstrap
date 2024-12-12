@@ -24,6 +24,7 @@ const Login = () => {
             if (response.status === 200) {
                 const user = response.data.user;
                 dispatch(loginSuccess(user));
+                
 
                 if (user.role === 'admin') {
                     window.location.href = 'http://localhost:3001/adm'; // Chuyển đến trang quản lý admin

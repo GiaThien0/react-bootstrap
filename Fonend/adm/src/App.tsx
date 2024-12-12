@@ -6,6 +6,7 @@ import SideBar from './compoment/SideBar';
 import Navbard from './compoment/CustomNavbar/CustomNavbar';
 import Products from './home/Products';
 import Oder from './home/Oder';
+import Banner from './home/Banner';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
 
               <Route path="/admproducts" element={<Products />} />
               <Route path="/admOder" element={<Oder />} />
+              <Route path="/Banner" element={<Banner/>} />
 
             </Routes>
           </div>

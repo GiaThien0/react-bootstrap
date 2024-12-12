@@ -41,8 +41,9 @@ function SideBar() {
           <MenuItem component={<Link to="/adm" />}> admin</MenuItem>
           <MenuItem component={<Link to="/admproducts" />}>  Products</MenuItem>
           <MenuItem component={<Link to="/admOder" />}>Oder cart</MenuItem>
+          <MenuItem component={<Link to="/Banner" />}>Banner</MenuItem>
 
-          </SubMenu>
+        </SubMenu>
           <MenuItem> Documentation </MenuItem>
           <MenuItem> Calendar </MenuItem>
         </Menu>

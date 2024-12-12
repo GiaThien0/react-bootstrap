@@ -18,6 +18,7 @@ import Register from './layout/Home/theme/register';
 import User from './layout/Home/theme/User';
 import ForgotPassword from './Component/comment/ForgotPassword';
 import ResetPassword from './Component/comment/ResetPassword';
+import VNPAYPayment from './layout/Home/theme/VNPAYPayment';
 
 
 const App: React.FC = () => {
@@ -39,6 +40,7 @@ const App: React.FC = () => {
                 <Route path="/User" element={<User />} />
                 <Route path="/ForgotPassword" element={<ForgotPassword />} />
                 <Route path="/ResetPassword" element={<ResetPassword />} />
+                <Route path="/VNPAYPayment" element={<VNPAYPayment />} />
 
 
             </Routes>

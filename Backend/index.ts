@@ -7,7 +7,7 @@ import categoryRoute from './src/router/category'
 import order from './src/router/order'
 import cookieParser from 'cookie-parser';
 import review from './src/router/rewiew'
-
+import Banner from './src/router/Banner'; // Import bannerRoutes
 import cart from './src/router/cart'
 const cors = require('cors');
 dotenv.config();
@@ -42,6 +42,7 @@ app.use("/v1/category",categoryRoute);
 app.use("/v1/cart",cart);
 app.use("/v1/order",order);
 app.use("/v1/review",review);
+app.use("/v1/banner",Banner);
 
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {
