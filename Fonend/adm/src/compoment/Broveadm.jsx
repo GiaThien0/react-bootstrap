@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import Cookies from 'js-cookie'; // Import js-cookie
-import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode'; // Import đúng cú pháp
 
 function Broveadm({ setUserName, setUserRole, setLoading }) {
 
@@ -14,25 +14,34 @@ function Broveadm({ setUserName, setUserRole, setLoading }) {
                 
                 if (token) {
                     // Giải mã token nếu có
-                    const decodedToken = jwtDecode(token); // Giải mã JWT token
+                    const decodedToken = jwtDecode(token);
+
+                    // Kiểm tra tính hợp lệ của token
+                    const currentTime = Date.now() / 1000; // thời gian hiện tại tính bằng giây
+                    if (decodedToken.exp < currentTime) {
+                        // Token hết hạn, chuyển hướng về trang chủ
+                        Cookies.remove('token');
+                        window.location.href = '/';
+                        return;
+                    }
 
                     // Cập nhật state với thông tin người dùng từ token
-                    setUserName(decodedToken.name); // Giả sử token chứa 'name'
-                    setUserRole(decodedToken.role); // Giả sử token chứa 'role'
+                    setUserName(decodedToken.name);
+                    setUserRole(decodedToken.role);
                 } else {
                     console.error('No user data found in cookies');
-                    // Xử lý trường hợp không có cookie (ví dụ: chuyển hướng người dùng về trang đăng nhập)
-                    window.location.href = '/login';
+                    window.location.href = '/';
                 }
             } catch (error) {
                 console.error('Error fetching user data from cookies:', error);
+                window.location.href = '/';
             } finally {
                 setLoading(false); // Hoàn tất tải
             }
         };
 
         fetchUserDataFromCookie();
-    }, [setUserName, setUserRole, setLoading]); // Gọi lại khi hàm setUserName và setUserRole thay đổi
+    }, [setUserName, setUserRole, setLoading]);
 
     return null; // Không render gì
 }

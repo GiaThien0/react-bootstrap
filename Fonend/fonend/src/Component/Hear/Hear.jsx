@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Button, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { MdPerson } from 'react-icons/md';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess, logout } from '../../redux/authSlice';
 import SearchInput from '../SearchInput/SearchInput';
@@ -43,6 +43,7 @@ const Hear = () => {
                     email: decodedToken.email,
                     phone: decodedToken.phone,
                     address: decodedToken.address,
+                    role: decodedToken.role, // Thêm trường role
                 }));
             } catch (error) {
                 console.error('Invalid or expired token', error);
@@ -79,6 +80,14 @@ const Hear = () => {
                                         <span>Thông tin của bạn</span>
                                     </Button>
                                 </Dropdown.Item>
+                                {user.role === 'admin' && ( // Chỉ hiển thị nếu người dùng là admin
+                                    <Dropdown.Item href="http://localhost:3001/adm">
+                                        <Button variant="outline-Secondary" className="Hear-2">
+                                            <i className="bi bi-shield-lock"></i>
+                                            <span>Trang Admin</span>
+                                        </Button>
+                                    </Dropdown.Item>
+                                )}
                                 <Dropdown.Item href="#/action-2">
                                     <Button variant="outline-Secondary" className="Hear-2" onClick={handleLogout}>
                                         <i className="bi bi-box-arrow-right me-1"></i>

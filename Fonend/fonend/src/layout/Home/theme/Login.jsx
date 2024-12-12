@@ -26,11 +26,9 @@ const Login = () => {
                 dispatch(loginSuccess(user));
                 
 
-                if (user.role === 'admin') {
-                    window.location.href = 'http://localhost:3001/adm'; // Chuyển đến trang quản lý admin
-                } else {
+               
                     window.location.href = '/'; // Chuyển đến trang quản lý người dùng
-                }
+                
             }
         } catch (error) {
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';

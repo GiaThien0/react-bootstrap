@@ -37,14 +37,19 @@ function SideBar() {
       <Image src={logo} thumbnail />
         </div>
         <Menu>
-          <SubMenu label="E-commerce">
+          <SubMenu label="Quan ly san pham va adm">
           <MenuItem component={<Link to="/adm" />}> admin</MenuItem>
           <MenuItem component={<Link to="/admproducts" />}>  Products</MenuItem>
-          <MenuItem component={<Link to="/admOder" />}>Oder cart</MenuItem>
           <MenuItem component={<Link to="/Banner" />}>Banner</MenuItem>
 
         </SubMenu>
-          <MenuItem> Documentation </MenuItem>
+        <SubMenu label="Quản lý đơn hàng">
+        <MenuItem component={<Link to="/admOder" />}>Đơn hàng mới</MenuItem>
+        <MenuItem component={<Link to="/Confirmed" />}>Sản phẩm đã được duyệt</MenuItem>
+        <MenuItem component={<Link to="/Shiper" />}>Sản phẩm đang được giao hàng</MenuItem>
+
+        
+        </SubMenu>
           <MenuItem> Calendar </MenuItem>
         </Menu>
         <Menu

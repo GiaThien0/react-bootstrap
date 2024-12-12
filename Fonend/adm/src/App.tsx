@@ -7,6 +7,8 @@ import Navbard from './compoment/CustomNavbar/CustomNavbar';
 import Products from './home/Products';
 import Oder from './home/Oder';
 import Banner from './home/Banner';
+import Confirmed from './home/Confirmed';
+import Shiper from './home/Shiper';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
               <Route path="/admproducts" element={<Products />} />
               <Route path="/admOder" element={<Oder />} />
               <Route path="/Banner" element={<Banner/>} />
+              <Route path="/Confirmed" element={<Confirmed/>} />
+              <Route path="/Shiper" element={<Shiper/>} />
 
             </Routes>
           </div>
