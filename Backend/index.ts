@@ -1,5 +1,4 @@
 import express, { Router } from 'express';
-import userRoute from './src/router/user'
 import dotenv from 'dotenv';
 import connectDB from './src/config/db'; 
 import productsRoute from './src/router/products'
@@ -25,12 +24,12 @@ connectDB()
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow client & admin origins
   credentials: true,  // Allow credentials (cookies)
+  
   allowedHeaders: ['Content-Type', 'Authorization'],  // Allow specific headers
 }));
 
 app.use(bodyParser.json({ limit: '10mb' })); // Tăng giới hạn kích thước
 app.use(express.json());
-app.use('/api',userRoute)
 app.use("/v1/auth", autheRouter);
 
 app.use('/uploads', express.static('uploads'));

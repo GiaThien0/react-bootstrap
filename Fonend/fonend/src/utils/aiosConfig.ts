@@ -4,8 +4,8 @@ import Cookies from 'js-cookie'; // Đảm bảo thư viện js-cookie đã đư
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:4000/v1', // Thay đổi URL này theo cấu hình backend của bạn
-    timeout: 10000, // Thời gian timeout cho request
-    withCredentials: true
+    timeout: 10000, // Thời gian timeout cho request   
+     withCredentials: true
 });
 
 // Interceptors (tuỳ chọn)

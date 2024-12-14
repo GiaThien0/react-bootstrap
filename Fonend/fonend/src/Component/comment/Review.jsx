@@ -1,93 +1,139 @@
 import React, { useEffect, useState } from 'react';
 import StarRating from './StarRating';
-import { Alert, Button, Form } from 'react-bootstrap';
+import { Alert, Button, Form, Card } from 'react-bootstrap';
 import axiosInstance from '../../utils/aiosConfig';
-import { FaBullseye, FaCrosshairs, FaStar } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 
 function Review({ email, userId, productId }) {
-    const [rating, setRating] = useState(0); // Lưu giá trị số sao
+    const [rating, setRating] = useState(1); // Giá trị mặc định của rating là 1
     const [comment, setComment] = useState(''); // Lưu nội dung bình luận
     const [loading, setLoading] = useState(false); // Sử dụng state loading
     const [message, setMessage] = useState(''); // State để hiển thị thông báo sau khi gửi đánh giá
     const [reviews, setReviews] = useState([]);
     const [error, setError] = useState(null);
+    const [parentReviewId, setParentReviewId] = useState(null); // State để lưu ID bình luận cha khi trả lời
+    const [replyComment, setReplyComment] = useState(''); // State để lưu bình luận trả lời
 
     useEffect(() => {
         const fetchReviews = async () => {
-          try {
-            const response = await axiosInstance.get(`/review/getrewiew/${productId}`); // Gọi API để lấy bình luận của sản phẩm
-            setReviews(response.data);
-          } catch (error) {
-            setError('Error fetching reviews: ' + error.message);
-          } finally {
-            setLoading(false);
-          }
+            try {
+                const response = await axiosInstance.get(`/review/getrewiew/${productId}`);
+                setReviews(response.data);
+            } catch (error) {
+                setError('Error fetching reviews: ' + error.message);
+            } finally {
+                setLoading(false);
+            }
         };
-    
+
         fetchReviews();
-      }, [productId]);
+    }, [productId]);
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
-    const renderStars = (rating) => {
-        return (
-          <div style={{ display: 'flex' }}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar
-                key={star}
-                size={30}
-                color={star <= rating ? "#FFD700" : "#ccc"} // Vàng khi được chọn, xám khi chưa
-              />
-            ))}
-          </div>
-        );
+        try {
+            await axiosInstance.post('/review/reviewdata', {
+                userId,
+                email,
+                rating,
+                comment,
+                productId,
+                parentReview: null,
+            });
+
+            setMessage('Đánh giá thành công!');
+            setRating(1);
+            setComment('');
+            setParentReviewId(null);
+
+            const response = await axiosInstance.get(`/review/getrewiew/${productId}`);
+            setReviews(response.data);
+
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            setMessage('Xin vui lòng đăng nhập trước khi thực hiện.');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    if(error){
-        <div>
-             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', color: '#2f4f4f' }}>
-      {/* Mục tiêu, bạn có thể thay đổi màu sắc và kích thước */}
-      <FaCrosshairs style={{ marginRight: '10px', color: '#ff4500' }} /> 
-      <FaBullseye style={{ color: '#ff6347' }} /> {/* Biểu tượng mục tiêu */}
-    </div>
+    const handleReplySubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            await axiosInstance.post('/review/reviewdata', {
+                userId,
+                email,
+                comment: replyComment,
+                productId,
+                parentReview: parentReviewId,
+            });
+
+            setReplyComment('');
+            setParentReviewId(null);
+
+            const response = await axiosInstance.get(`/review/getrewiew/${productId}`);
+            setReviews(response.data);
+
+        } catch (error) {
+            console.error('Error submitting review:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const renderStars = (rating) => (
+        <div style={{ display: 'flex' }}>
+            {[1, 2, 3, 4, 5].map((star) => (
+                <FaStar
+                    key={star}
+                    size={30}
+                    color={star <= rating ? "#FFD700" : "#ccc"}
+                />
+            ))}
         </div>
-    }
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-  
-      try {
-          // Gửi đánh giá mới
-          await axiosInstance.post('/review/reviewdata', {
-              userId,      // ID người dùng
-              email,       // Email người dùng
-              rating,      // Điểm đánh giá (sao)
-              comment,     // Nội dung bình luận
-              productId,
-          });
-  
-          // Cập nhật lại thông báo sau khi gửi đánh giá thành công
-          setMessage('Đánh giá thành công!');
-          setRating(0);
-          setComment('');
-  
-          // Sau khi gửi thành công, tải lại danh sách đánh giá để hiển thị đánh giá mới
-          const response = await axiosInstance.get(`/review/getrewiew/${productId}`);
-          setReviews(response.data);
-  
-      } catch (error) {
-          console.error('Error submitting review:', error);
-          setMessage('Xin vui lòng đăng nhập trước khi thực hiện.');
-      } finally {
-          setLoading(false);
-      }
-  };
-    
+    );
+
+    const renderReview = (review, isChild = false) => (
+        <Card key={review._id} className="mb-3" style={{ marginLeft: isChild ? '20px' : '0px', borderLeft: isChild ? '2px solid #ccc' : 'none' }}>
+            <Card.Body>
+                <Card.Title>{review.email}</Card.Title>
+                <Card.Text>{review.comment}</Card.Text>
+                {review.rating > 0 && <div>{renderStars(review.rating)}</div>}
+                {!isChild && <Button variant="link" onClick={() => setParentReviewId(review._id)}>Bình luận</Button>}
+                {parentReviewId === review._id && (
+                    <Form onSubmit={handleReplySubmit} className="mt-2">
+                        <Form.Group controlId="replyComment">
+                            <Form.Control
+                                as="textarea"
+                                rows={2}
+                                placeholder="Viết bình luận trả lời..."
+                                value={replyComment}
+                                onChange={(e) => setReplyComment(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button type="submit" variant="primary" disabled={loading}>
+                            {loading ? 'Đang gửi...' : 'Gửi'}
+                        </Button>
+                    </Form>
+                )}
+                {review.comments && review.comments.map(childReview => (
+                    <div key={childReview._id} className="ml-3 mt-2 border-left pl-3" style={{ marginLeft: '20px', borderLeft: '2px solid #ccc' }}>
+                        <strong>{childReview.email}</strong> - {childReview.comment}
+                    </div>
+                ))}
+            </Card.Body>
+        </Card>
+    );
+
     return (
         <div className='mt-5'>
             <h2>Đánh giá sản phẩm</h2>
             <div>
                 <Form onSubmit={handleSubmit}>
-                    {/* Truyền hàm setRating vào StarRating */}
                     <StarRating onRatingChange={(value) => setRating(value)} />
 
                     <Form.Group className="mb-3 mt-5" controlId="exampleForm.ControlTextarea1">
@@ -104,30 +150,13 @@ function Review({ email, userId, productId }) {
                     </Button>
                 </Form>
 
-                {/* Hiển thị thông báo khi gửi đánh giá */}
                 {message && <div className="mt-3 alert alert-info">{message}</div>}
             </div>
             
             <div className="mt-5">
-            { reviews.map((reviews) => (
-                <div key={reviews.id}>
-                     
-                    <p><strong>Số sao:</strong>  {renderStars(reviews.rating)}</p>
-                    <div className='d-flex '>
-                        <p>{reviews.email}</p>
-
-                        <p ><strong style={{marginLeft:'20px'}}>Bình luận:</strong> {reviews.comment}</p>
-                    
-                    
-                    </div>
-                   
-
-
-               </div>
-            ))}
-             </div>
+                {reviews.map(review => renderReview(review))}
+            </div>
         </div>
-        
     );
 }
 

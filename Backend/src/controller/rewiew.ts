@@ -1,67 +1,82 @@
+import mongoose from 'mongoose';
 import ProductModel from '../models/productModel';
 import ReviewModel from '../models/rewiew';
 
+const reviewController = {  
+    reviewdata: async (req:any, res:any) => {
+        const { rating, comment, productId, email, userId, parentReview } = req.body;
 
-const rewiewController = {  
-    reviewdata : async (req: any, res: any) => {
-        const { rating, comment, productId, email, userId } = req.body;
+        console.log("Received data: ", req.body);
 
-        // Kiểm tra tất cả các trường bắt buộc
-        if (!rating || !comment || !productId || !userId || !email) {
+        if (!comment || !productId || !userId || !email) {
             return res.status(400).json({ message: 'All fields are required' });
         }
         
         try {
-            // Tạo mới một review
-            const newReview = new ReviewModel({
-                userId,      // ID người dùng
-                email,       // Email người dùng
-                rating,      // Điểm đánh giá (sao)
-                comment,     // Nội dung bình luận
-                productId,   // ID sản phẩm mà bình luận thuộc về
-            });
-    
-            // Lưu review vào collection Review
-            await newReview.save();
-    
-            // Cập nhật lại thông tin của sản phẩm
-            const product = await ProductModel.findById(productId);
-            if (!product) {
-                return res.status(404).json({ message: 'Product not found' });
+            if (parentReview) {
+                // Nếu có parentReview, thêm bình luận con vào đánh giá
+                const review = await ReviewModel.findById(parentReview);
+                if (!review) {
+                    return res.status(404).json({ message: 'Parent review not found' });
+                }
+
+                review.comments.push({
+                    userId,
+                    email, // Thêm email vào bình luận con
+                    comment,
+                });
+                await review.save();
+
+                res.status(201).json({ 
+                    message: 'Reply submitted successfully',
+                    review,
+                });
+            } else {
+                // Nếu không có parentReview, tạo mới một review
+                const newReview = new ReviewModel({
+                    userId,
+                    email,
+                    rating: rating || 1, // Đảm bảo rating không phải là 0
+                    comment,
+                    productId,
+                });
+
+                await newReview.save();
+
+                const product = await ProductModel.findById(productId);
+                if (!product) {
+                    return res.status(404).json({ message: 'Product not found' });
+                }
+
+                product.reviews.push(newReview._id);
+                await product.save();
+
+                res.status(201).json({ 
+                    message: 'Review submitted successfully',
+                    review: newReview,
+                });
             }
-    
-            // Thêm review vào danh sách reviews của sản phẩm
-            product.reviews.push(newReview._id); // Thêm ID của review vào mảng reviews của sản phẩm
-            await product.save(); // Lưu lại sản phẩm đã được cập nhật
-    
-            // Trả về kết quả thành công
-            res.status(201).json({ 
-                message: 'Review submitted successfully',
-                review: newReview,
-            });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error submitting review' });
         }
-},
-        getrewiew: async (req: any, res: any) => {
-            const { productId } = req.params; // Lấy productId từ tham số URL
+    },
+    getReview: async (req:any, res:any) => {
+        const { productId } = req.params;
 
-            try {
-              // Tìm tất cả các bình luận có cùng productId
-              const reviews = await ReviewModel.find({ productId: productId });
+        try {
+            const reviews = await ReviewModel.find({ productId }).populate('comments.userId');
           
-              if (!reviews || reviews.length === 0) {
+            if (!reviews || reviews.length === 0) {
                 return res.status(404).json({ message: 'No reviews found for this product.' });
-              }
-          
-              // Trả về danh sách bình luận
-              res.status(200).json(reviews);
-            } catch (error) {
-              console.error(error);
-              res.status(500).json({ message: 'Server error' });
             }
-},
+          
+            res.status(200).json(reviews);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    },
+};
 
-}
-    export default rewiewController; 
+export default reviewController;

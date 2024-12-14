@@ -3,15 +3,12 @@ import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import logo from '../../../Component/assets/logo.webp';
 import { Link } from 'react-router-dom';
 import Socialogin from '../../../Component/Socialogin';
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../../redux/authSlice';
 import axiosInstance from '../../../utils/aiosConfig';
 
 const Login = () => {
     const [loginData, setLoginData] = useState({ email: '', password: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useDispatch();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -22,13 +19,9 @@ const Login = () => {
             const response = await axiosInstance.post('/auth/loginUser', loginData, { withCredentials: true });
 
             if (response.status === 200) {
-                const user = response.data.user;
-                dispatch(loginSuccess(user));
-                
 
-               
-                    window.location.href = '/'; // Chuyển đến trang quản lý người dùng
-                
+                // Điều hướng sau khi đăng nhập thành công
+                window.location.href = '/';
             }
         } catch (error) {
             const message = error.response?.data?.message || 'Đăng nhập không thành công. Vui lòng thử lại.';

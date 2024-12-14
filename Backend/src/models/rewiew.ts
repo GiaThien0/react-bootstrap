@@ -1,5 +1,25 @@
 import mongoose, { Schema } from 'mongoose';
 
+// Định nghĩa schema cho Comment (bình luận con)
+const CommentSchema = new Schema({
+    userId: {
+        type: String, // ID của người dùng thực hiện bình luận
+        required: true,
+    },
+    email: {
+        type: String, // Email người dùng thực hiện bình luận
+        required: true,
+    },
+    comment: {
+        type: String, // Nội dung bình luận con
+        required: true,
+    },
+    date: {
+        type: Date, // Ngày bình luận
+        default: Date.now,
+    },
+});
+
 // Định nghĩa schema cho Review
 const ReviewSchema = new Schema({
     productId: {
@@ -11,7 +31,6 @@ const ReviewSchema = new Schema({
         type: String, // ID của người dùng thực hiện đánh giá
         required: true,
     },
-   
     email: {
         type: String, // Email người dùng
         required: true,
@@ -31,6 +50,8 @@ const ReviewSchema = new Schema({
         type: Date, // Ngày đánh giá
         default: Date.now,
     },
+    // Thêm trường comments để lưu các bình luận con
+    comments: [CommentSchema], // Mảng chứa các bình luận con
 });
 
 // Tạo model từ schema

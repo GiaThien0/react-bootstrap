@@ -17,6 +17,7 @@ function CustomNavbar() {
     //   }
     // }
   }, [userRole, loading]);
+  <Broveadm setUserName={setUserName} setUserRole={setUserRole} setLoading={setLoading} />
 
   const handleLogout = async () => {
     try {
@@ -46,17 +47,16 @@ function CustomNavbar() {
           <Navbar.Collapse id="navbarScroll" className="d-flex justify-content-between">
             <Nav.Link href="http://localhost:3000">Trang chủ</Nav.Link>
 
-            <Nav.Link className="d-flex gap-2">
-              <Broveadm setUserName={setUserName} setUserRole={setUserRole} setLoading={setLoading} />
-
-              <Button variant="outline-Secondary" className="Hear-2" onClick={handleLogout}>
+            
+          </Navbar.Collapse>
+          <Button variant="outline-Secondary" className="Hear-2" onClick={handleLogout}>
                 <i className="bi bi-box-arrow-right me-1"></i>
                 <span>Đăng xuất</span>
               </Button>
+              <div className="d-flex gap-2 mt-3">
               <p>{userName}</p>
               <p>{userRole}</p>
-            </Nav.Link>
-          </Navbar.Collapse>
+              </div>
         </Container>
       </Navbar>
     </div>

@@ -1,46 +1,33 @@
 import { useEffect } from 'react';
-import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode'; // Import đúng cú pháp
+import axiosInstance from '../utils/aiosConfig'; // Make sure this is correctly imported
 
 function Broveadm({ setUserName, setUserRole, setLoading }) {
 
     useEffect(() => {
         setLoading(true);
 
-        const fetchUserDataFromCookie = () => {
+        const fetchUserData = async () => {
             try {
-                // Lấy 'token' từ cookie
-                const token = Cookies.get('token');
+                const response = await axiosInstance.get('/auth/userdata', { withCredentials: true });
                 
-                if (token) {
-                    // Giải mã token nếu có
-                    const decodedToken = jwtDecode(token);
-
-                    // Kiểm tra tính hợp lệ của token
-                    const currentTime = Date.now() / 1000; // thời gian hiện tại tính bằng giây
-                    if (decodedToken.exp < currentTime) {
-                        // Token hết hạn, chuyển hướng về trang chủ
-                        Cookies.remove('token');
-                        window.location.href = '/';
-                        return;
-                    }
-
-                    // Cập nhật state với thông tin người dùng từ token
-                    setUserName(decodedToken.name);
-                    setUserRole(decodedToken.role);
-                } else {
-                    console.error('No user data found in cookies');
-                    window.location.href = '/';
-                }
+                // Cập nhật state với thông tin người dùng từ API response
+                const { name, role } = response.data.user;
+                setUserName(name);
+                setUserRole(role);
             } catch (error) {
-                console.error('Error fetching user data from cookies:', error);
-                window.location.href = '/';
+                if (error.response?.status === 401) {
+                    // Nếu lỗi 401, điều hướng người dùng đến trang đăng nhập
+                    window.location.href = 'http://localhost:3000'; // Bạn có thể điều hướng đến trang đăng nhập nếu không có quyền
+                } else {
+                    console.error('Error fetching user data:', error);
+                    window.location.href = '/'; // Nếu có lỗi khác, điều hướng về trang chủ
+                }
             } finally {
                 setLoading(false); // Hoàn tất tải
             }
         };
 
-        fetchUserDataFromCookie();
+        fetchUserData();  // Gọi hàm để lấy dữ liệu người dùng từ API
     }, [setUserName, setUserRole, setLoading]);
 
     return null; // Không render gì

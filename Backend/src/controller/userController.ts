@@ -102,7 +102,7 @@ const authController = {
 
     // Thiết lập cookie với token
     res.cookie('token', token, {
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',    
             maxAge: 3600000  // 1 giờ
     });
@@ -234,14 +234,16 @@ const authController = {
     },
     
     
-    Userupdate: async (req: any, res: any) => { // chinh sửa thong tin cho nguoi dung
+    Userupdate: async (req: any, res: any) => {
         try {
-            const { id } = req.params;  // Lấy id từ URL params
-            const { name, address, phone } = req.body;
+            const { id } = req.params;  // Lấy id người dùng từ URL params
+            const { name, address, phone } = req.body;  // Lấy thông tin người dùng từ body request
+    
+            console.log('Updating user with ID:', id);  // Debug ID
+            console.log('New data:', req.body);  // Debug dữ liệu mới
     
             // Tìm người dùng trong cơ sở dữ liệu theo id
-            const user = await User.findById(id);  // Sử dụng id từ params, không phải từ body
-    
+            const user = await User.findById(id);
             if (!user) {
                 return res.status(404).json({ message: 'Người dùng không tồn tại' });
             }
@@ -251,27 +253,22 @@ const authController = {
             user.address = address || user.address;
             user.phone = phone || user.phone;
     
-            // Lưu thông tin đã được cập nhật vào cơ sở dữ liệu
             await user.save();
     
             // Tạo JWT mới với thông tin người dùng đã cập nhật
-            const newAccessToken = jwt.sign(
-                { id: user._id, name: user.name, address: user.address, phone: user.phone }, 
-                process.env.jwt_ac!, 
-                { expiresIn: '1h' }
-            );
+         
     
             return res.status(200).json({
                 message: 'Thông tin người dùng đã được cập nhật',
-                user,  // Trả về thông tin đã được cập nhật
-                accessToken: newAccessToken,  // Trả về access token mới
+                user,
             });
+    
         } catch (error) {
-            console.error('Error updating user data:', error);
+            console.error('Error during user update:', error);
             return res.status(500).json({ message: 'Đã có lỗi xảy ra' });
         }
     },
-
+    
 
 
         

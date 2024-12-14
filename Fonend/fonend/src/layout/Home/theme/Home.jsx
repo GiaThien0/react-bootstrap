@@ -3,10 +3,11 @@ import { Container, Row, Col } from 'react-bootstrap';
 import CustomCarousels from '../../../Component/CustomCarousels/CustomCarousels';
 import CustomListgroups from '../../../Component/CustomListgroups/CustomListgroups';
 import CustomProduc from '../../../Component/CustomProduc/CustomProduc';
+import BannerTrangchu from '../../../Component/comment/Banner/BannerTrangchu';
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null); // State cho danh mục đã chọn
-
+    
   return (
     <Container className=' mt-3 border  rounded ' style={{backgroundColor:'#fff'}}>
       <Row className='pt-2'>
@@ -20,6 +21,7 @@ function Home() {
       <div className='mt-5'>
         <CustomProduc />
       </div>
+      <BannerTrangchu></BannerTrangchu>
       
     </Container>
   );

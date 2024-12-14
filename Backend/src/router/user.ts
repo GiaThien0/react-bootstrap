@@ -19,6 +19,6 @@ router.post("/addUser", authController.addUser);
 router.get("/readusers", authController.readusers);
 router.delete("/deleteuser/:id", authController.deleteuser);
 router.put("/updateuser/:id", authController.updateUser);
-router.get('/adm/userdata', usermiddleware.getdatalogin);
-router.put('/Userupdate/:id', authController.Userupdate);
+router.get('/userdata', usermiddleware.authenticateToken,usermiddleware.getdatalogin);
+router.put('/Userupdate/:id',usermiddleware.authenticateToken, authController.Userupdate);
 export default router;

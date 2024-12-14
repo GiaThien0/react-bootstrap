@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import axiosInstance from '../../../utils/aiosConfig';
-import {jwtDecode} from 'jwt-decode';
-import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../../../redux/authSlice';
 
@@ -17,26 +15,28 @@ const User = () => {
     phone: user?.phone || '',
   });
 
-  // Fetch thông tin người dùng khi component render
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
+    // API trả về full thông tin user, không cần header Authorization
+    const fetchUser = async () => {
       try {
-        const decodedToken = jwtDecode(token);
-        setUserId(decodedToken.id);
-        setEmail(decodedToken.email || '');
-        setUserData({
-          name: decodedToken.name || '',
-          address: decodedToken.address || '',
-          phone: decodedToken.phone || '',
-        });
+        const response = await axiosInstance.get('/auth/userdata');
+        if (response.status === 200) {
+          const user = response.data.user;
+          setUserId(user.id);
+          setEmail(user.email);
+          setUserData({
+            name: user.name,
+            address: user.address,
+            phone: user.phone,
+          });
+        }
       } catch (error) {
-        console.error('Token không hợp lệ hoặc đã hết hạn', error);
+        console.error('Error fetching user data:', error);
       }
-    } else {
-      console.error('Token không tồn tại');
-    }
-  }, []);
+    };
+
+    fetchUser();
+  }, [dispatch]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,10 +56,11 @@ const User = () => {
       const { accessToken } = response.data;
 
       if (accessToken) {
-        Cookies.set('token', accessToken, { expires: 7 });
-        localStorage.setItem('token', accessToken);
+        // Cập nhật token vào localStorage (nếu cần)
+        localStorage.setItem('accessToken', accessToken);
       }
 
+      // Cập nhật thông tin người dùng
       setUserData({
         name: response.data.name || userData.name,
         address: response.data.address || userData.address,
@@ -74,6 +75,8 @@ const User = () => {
       }));
 
       alert('Thông tin người dùng đã được cập nhật!');
+            window.location.reload();
+
     } catch (error) {
       console.error('Lỗi khi cập nhật thông tin người dùng:', error);
     }
@@ -84,7 +87,6 @@ const User = () => {
       <Row>
         <Col md={6} className="mx-auto">
           <h2>Chỉnh sửa thông tin người dùng</h2>
-
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="formEmail">
               <Form.Label>Email</Form.Label>
@@ -138,6 +140,6 @@ const User = () => {
       </Row>
     </Container>
   );
-}
+};
 
 export default User;
