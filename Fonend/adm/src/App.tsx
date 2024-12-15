@@ -9,6 +9,8 @@ import Oder from './home/Oder';
 import Banner from './home/Banner';
 import Confirmed from './home/Confirmed';
 import Shiper from './home/Shiper';
+import Discout from './home/Discout';
+import AssignDDiscount from './home/AssignDiscount';
 
 function App() {
   return (
@@ -28,6 +30,9 @@ function App() {
               <Route path="/Banner" element={<Banner/>} />
               <Route path="/Confirmed" element={<Confirmed/>} />
               <Route path="/Shiper" element={<Shiper/>} />
+              <Route path="/Discout" element={<Discout/>} />
+              <Route path="/AssignDDiscount" element={<AssignDDiscount/>} />
+
 
             </Routes>
           </div>

@@ -17,7 +17,6 @@ function CustomNavbar() {
     //   }
     // }
   }, [userRole, loading]);
-  <Broveadm setUserName={setUserName} setUserRole={setUserRole} setLoading={setLoading} />
 
   const handleLogout = async () => {
     try {
@@ -54,6 +53,8 @@ function CustomNavbar() {
                 <span>Đăng xuất</span>
               </Button>
               <div className="d-flex gap-2 mt-3">
+              <Broveadm setUserName={setUserName} setUserRole={setUserRole} setLoading={setLoading} />
+
               <p>{userName}</p>
               <p>{userRole}</p>
               </div>

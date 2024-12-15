@@ -41,6 +41,8 @@ function SideBar() {
           <MenuItem component={<Link to="/adm" />}> admin</MenuItem>
           <MenuItem component={<Link to="/admproducts" />}>  Products</MenuItem>
           <MenuItem component={<Link to="/Banner" />}>Banner</MenuItem>
+          <MenuItem component={<Link to="/Discout" />}>Discout</MenuItem>
+          <MenuItem component={<Link to="/AssignDDiscount" />}>AssignDDiscount</MenuItem>
 
         </SubMenu>
         <SubMenu label="Quản lý đơn hàng">

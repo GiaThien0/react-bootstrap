@@ -299,6 +299,8 @@ const handleDeleteCategory = async (event) => {
           <Table striped bordered hover className="text-center">
             <thead>
               <tr>
+              <th>id sản phẩm</th>
+
                 <th>Hình</th>
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
@@ -313,6 +315,7 @@ const handleDeleteCategory = async (event) => {
             <tbody>
               {products.map((product) => (
                 <tr key={product._id}>
+                  <td>{product._id}</td>
                   <td>
                     <Image src={`http://localhost:4000/${product.image}`} className="w-25 pt-5" rounded />
                   </td>

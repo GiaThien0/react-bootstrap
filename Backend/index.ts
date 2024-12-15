@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import review from './src/router/rewiew'
 import Banner from './src/router/Banner'; // Import bannerRoutes
 import cart from './src/router/cart'
+import Discount from './src/router/Discount'
+
 const cors = require('cors');
 dotenv.config();
 const bodyParser = require('body-parser');
@@ -42,6 +44,7 @@ app.use("/v1/cart",cart);
 app.use("/v1/order",order);
 app.use("/v1/review",review);
 app.use("/v1/banner",Banner);
+app.use("/v1/discount",Discount);
 
 // Middleware để xử lý dữ liệu JSON
 app.listen(port, () => {

@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { Link } from 'react-router-dom';
 import '../CustomCardproduc/CustomCardproduc.css';
-import axiosInstance from '../../utils/aiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../../redux/productSlice'; // Import action từ redux slice
 
 function CustomCardproduc() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
+  const dispatch = useDispatch();
+
+  // Lấy dữ liệu từ Redux store
+  const { products, status, error } = useSelector((state) => state.products);
+
   const responsive = {
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 5 },
     tablet: { breakpoint: { max: 1024, min: 464 }, items: 2 },
@@ -18,68 +20,56 @@ function CustomCardproduc() {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axiosInstance.get('products/getproducts');
-        const allProducts = response.data;
+    if (status === 'idle') {
+      dispatch(fetchProducts()); // Dispatch action để fetch dữ liệu khi status là 'idle'
+    }
+  }, [status, dispatch]);
 
-        // Lọc sản phẩm trong 3 tháng qua
-        const currentDate = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(currentDate.getMonth() - 3); // Lấy ngày cách đây 3 tháng
-
-        const filteredProducts = allProducts.filter(product => {
-          const productDate = new Date(product.createdAt);
-          return productDate >= threeMonthsAgo; // Chỉ hiển thị sản phẩm mới trong 3 tháng qua
-        });
-
-        setProducts(filteredProducts);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (status === 'loading') return <p className="text-center">Loading...</p>;
+  if (status === 'failed') return <p className="text-center text-danger">Error: {error}</p>;
 
   return (
-    <Carousel 
-      responsive={responsive}
-      swipeable={true}
-      draggable={true}
-      showDots={false}
-      infinite={true}
-      autoPlay={true}
-      autoPlaySpeed={3000}
-      keyBoardControl={true}
-      customTransition="all .5"
-      transitionDuration={500}
-      containerClass="carousel-container"
-      removeArrowOnDeviceType={["tablet", "mobile"]}
-      dotListClass="custom-dot-list-style"
-    >
-      {products.map((product) => (
-        <div key={product._id} className="mb-5">
-          <Link to={`/Productdetail/${product._id}`} className="Card-Link">
-            <Card className="product-card card-hover ">
-              <Card.Img  src={`http://localhost:4000/${product.image}`} className="" />
-              <Card.Body>
-                <Card.Title style={{ color: 'black', fontSize: '15px' }}>{product.name}</Card.Title>
-                <Card.Text style={{ color: "red" }}>
-                  Giá bán: {product.price.toLocaleString('vi-VN')} đ
-                  <Card.Img  src="https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg" className="pt-2" />
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Link>
-        </div>
-      ))}
-    </Carousel>
+    <div className="product-carousel-container">
+      <Carousel
+        responsive={responsive}
+        swipeable={true}
+        draggable={true}
+        showDots={false}
+        infinite={true}
+        autoPlay={true}
+        autoPlaySpeed={3000}
+        keyBoardControl={true}
+        customTransition="all .5"
+        transitionDuration={500}
+        containerClass="carousel-container"
+        removeArrowOnDeviceType={["tablet", "mobile"]}
+        dotListClass="custom-dot-list-style"
+      >
+        {products.map((product) => (
+          <div key={product.id} className="mb-5">
+            <Link to={`/Productdetail/${product.id}`} className="Card-Link">
+              <Card className="product-card card-hover">
+                <Card.Img
+                  src={`http://localhost:4000/${product.image}`}
+                  alt={product.name}
+                />
+                <Card.Body>
+                  <Card.Title className="product-title">{product.name}</Card.Title>
+                  <Card.Text className="product-price">
+                    Giá bán: {product.price.toLocaleString('vi-VN')} đ
+                    <Card.Img
+                      src="https://cdn-v2.didongviet.vn/files/default/2024/9/17/0/1729122848588_label_02.jpg"
+                      className="pt-2"
+                      alt="label"
+                    />
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Link>
+          </div>
+        ))}
+      </Carousel>
+    </div>
   );
 }
 

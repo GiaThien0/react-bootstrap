@@ -16,16 +16,16 @@ const ProductSchema = new Schema({
     },
     stock: {
         type: Number,
-        default: 0, // Mặc định là 0
+        default: 0,
     },
     category: {
-        type: Schema.Types.ObjectId,// Liên kết với Category
-        ref: 'Category', // Tham chiếu đến model Category
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
         required: true,
     },
     image: {
-        type: String, // Có thể là đường dẫn URL hoặc đường dẫn tương đối đến ảnh
-        required: true, // Bắt buộc nhập ảnh
+        type: String,
+        required: true,
     },
     createdAt: {
         type: Date,
@@ -33,13 +33,18 @@ const ProductSchema = new Schema({
     },
     reviews: [{ 
         type: Schema.Types.ObjectId, 
-        ref: 'Review'  // Liên kết với model Review
+        ref: 'Review'
     }],
     updatedAt: {
         type: Date,
         default: Date.now,
     },
+    discount: {  // Trường mới để lưu thông tin giảm giá
+        type: Schema.Types.ObjectId,
+        ref: 'Discount', // Liên kết với bảng Discount
+    },
 });
+
 
 // Tạo model từ schema
 const ProductModel = mongoose.model('Product', ProductSchema);
