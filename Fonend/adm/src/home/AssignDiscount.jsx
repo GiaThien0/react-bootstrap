@@ -29,25 +29,26 @@ function AssignDiscount() {
     try {
       const response = await axiosInstance.get('/discount/getAllDiscounts');
       setDiscounts(response.data); // Cập nhật danh sách giảm giá
-      console.log("Sản phẩm:", discounts);
     } catch (error) {
       console.error('Lỗi khi lấy giảm giá:', error);
     }
-    
   };
 
   // Hàm để gán giảm giá cho các sản phẩm
   const handleAddProductToDiscount = async () => {
     try {
-      await axiosInstance.post('/discount/assignDiscountToProducts', {
-        discountId: selectedDiscount,
-        productIds: selectedProducts,
+      const productIds = selectedProducts.map(product => product._id); // Chỉ lấy ID sản phẩm
+      console.log('Product IDs:', productIds); // In ra các ID sản phẩm
+
+      const response = await axiosInstance.put(`/discount/assignDiscountToProduct/${selectedDiscount}/discount`, {
+        productIds: productIds,
       });
+
       alert('Giảm giá đã được gán cho sản phẩm!');
-      // Tải lại danh sách giảm giá sau khi gán
-      fetchDiscounts();
+      fetchDiscounts(); // Tải lại danh sách giảm giá sau khi gán
+      fetchProducts(); // Cập nhật lại danh sách sản phẩm
     } catch (error) {
-      console.error('Lỗi khi gán giảm giá:', error);
+      console.error('Lỗi khi gán giảm giá:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -80,9 +81,9 @@ function AssignDiscount() {
                       value={product._id}
                       onChange={(e) => {
                         if (e.target.checked) {
-                          setSelectedProducts([...selectedProducts, product._id]);
+                          setSelectedProducts((prevSelected) => [...prevSelected, product]);
                         } else {
-                          setSelectedProducts(selectedProducts.filter(id => id !== product._id));
+                          setSelectedProducts((prevSelected) => prevSelected.filter(p => p._id !== product._id));
                         }
                       }}
                     />
@@ -120,9 +121,8 @@ function AssignDiscount() {
   {discount.products && discount.products.length > 0 ? (
     discount.products.map((productId) => {
       // Tìm sản phẩm theo productId trong mảng products
-      const product = products.find(p => p._id === productId._id); // Kiểm tra theo _id, vì productId trong discount có thể là đối tượng
-      return product ? (
-        <div key={productId._id}>{product.name}</div> // In ra tên sản phẩm nếu tìm thấy
+      return productId ? (
+        <div key={productId._id}>{productId.name}</div> // In ra tên sản phẩm nếu tìm thấy
       ) : (
         <div key={productId._id}>Sản phẩm không tồn tại</div> // Thông báo nếu không tìm thấy sản phẩm
       );
@@ -131,7 +131,6 @@ function AssignDiscount() {
     'Chưa gán sản phẩm'
   )}
 </td>
-
                 </tr>
               ))}
             </tbody>

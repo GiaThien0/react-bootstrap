@@ -140,29 +140,40 @@ const DiscountController = {
     },
 
     // Gán giảm giá cho sản phẩm
-    assignDiscountToProduct: async (req:any, res:any) => {
-        const { discountId } = req.body;
+   assignDiscountToProduct : async (req:any, res:any) => {
+    const { productIds } = req.body; // Nhận mảng ID sản phẩm từ body
+    const discountId = req.params.discountId; // Nhận discountId từ URL
 
-        try {
-            const product = await Product.findById(req.params.id);
-            if (!product) {
-                return res.status(404).json({ error: 'Product not found' });
-            }
-
-            // Only assign the discount if it isn't already assigned
-            if (product.discount && product.discount.toString() === discountId) {
-                return res.status(400).json({ error: 'This product already has this discount' });
-            }
-
-            product.discount = discountId;
-            await product.save();
-
-            res.status(200).json(product);
-        } catch (error:any) {
-            console.error(error);
-            res.status(400).json({ error: error.message });
+    try {
+        // Tìm mã giảm giá
+        const discount = await Discount.findById(discountId);
+        if (!discount) {
+            return res.status(404).json({ error: 'Discount not found' });
         }
+
+        // Cập nhật nhiều sản phẩm với discountId
+        const updatedProducts = await Product.updateMany(
+            { _id: { $in: productIds } },  // Tìm các sản phẩm có ID trong mảng productIds
+            { $set: { discount: discount._id } } // Gán discountId cho các sản phẩm
+        );
+
+        // Kiểm tra nếu không có sản phẩm nào được cập nhật
+        if (updatedProducts.modifiedCount === 0) {
+            return res.status(404).json({ error: 'No products found to update' });
+        }
+
+        // Thêm các sản phẩm vào mảng products của discount
+        await Discount.findByIdAndUpdate(discountId, {
+            $push: { products: { $each: productIds } }  // Thêm các ID sản phẩm vào mảng products
+        });
+
+        res.status(200).json({ message: 'Discount assigned to products successfully' });
+    } catch (error:any) {
+        console.error('Lỗi khi gán giảm giá cho sản phẩm:', error);
+        res.status(500).json({ error: error.message });
     }
+    }
+    
 };
 
 export default DiscountController;

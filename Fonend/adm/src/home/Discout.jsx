@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Row, Form, Container, Col, Table } from 'react-bootstrap';
 import axiosInstance from '../utils/aiosConfig';
+import ModdalDiscount from '../compoment/ModdalDiscount';
 
 function Discounts() {
   const [discounts, setDiscounts] = useState([]);
   const [products, setProducts] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
+const [currentDiscount, setCurrentDiscount] = useState(null);
   const [discountData, setDiscountData] = useState({
     title: '',
     percentage: '',
@@ -35,7 +38,10 @@ function Discounts() {
       console.error('Lỗi khi lấy thông tin người dùng:', error);
     }
   };
-
+  const handleUpdateDiscount = (discount) => {
+    setCurrentDiscount(discount);
+    setModalShow(true);
+  };
   // Lấy danh sách giảm giá
   const fetchDiscounts = async () => {
     try {
@@ -71,7 +77,21 @@ function Discounts() {
       });
     }
   };
-
+  const handleDeleteDiscount = async (discountId) => {
+    try {
+      const confirmDelete = window.confirm('Bạn có chắc chắn muốn xóa giảm giá này không?');
+      if (!confirmDelete) return;
+  
+      const response = await axiosInstance.delete(`/discount/deleteDiscount/${discountId}`);
+      if (response.status === 200) {
+        setMessage('Giảm giá đã được xóa thành công!');
+        fetchDiscounts(); // Làm mới danh sách giảm giá
+      }
+    } catch (error) {
+      console.error('Lỗi khi xóa giảm giá:', error);
+      setMessage('Lỗi: Không thể xóa giảm giá.');
+    }
+  };
   // Xóa sản phẩm khỏi danh sách
   const handleRemoveProduct = (id) => {
     setDiscountData({
@@ -229,7 +249,7 @@ function Discounts() {
             <tbody>
               {discounts.map((discount) => (
                 <tr key={discount._id}>
-                        <td>{discount.createdBy?.name || 'Không xác định'}</td> {/* Hiển thị tên người tạo */}
+                        <td>{discount.createdBy.name} </td> {/* Hiển thị tên người tạo */}
 
 
                   <td>{discount.title}</td>
@@ -240,9 +260,8 @@ function Discounts() {
   {discount.products && discount.products.length > 0 ? (
     discount.products.map((productId) => {
       // Tìm sản phẩm theo productId trong mảng products
-      const product = products.find(p => p._id === productId._id); // Kiểm tra theo _id, vì productId trong discount có thể là đối tượng
-      return product ? (
-        <div key={productId._id}>{product.name}</div> // In ra tên sản phẩm nếu tìm thấy
+      return productId ? (
+        <div key={productId._id}>{productId.name}</div> // In ra tên sản phẩm nếu tìm thấy
       ) : (
         <div key={productId._id}>Sản phẩm không tồn tại</div> // Thông báo nếu không tìm thấy sản phẩm
       );
@@ -258,6 +277,12 @@ function Discounts() {
                     >
                       Xóa
                     </Button>
+                    <Button
+  variant="primary"
+  onClick={() => handleUpdateDiscount(discount)}
+>
+  Cập nhật
+</Button>
                   </td>
                 </tr>
               ))}
@@ -265,6 +290,13 @@ function Discounts() {
           </Table>
         </Col>
       </Row>
+      <ModdalDiscount
+  show={modalShow}
+  onHide={() => setModalShow(false)}
+  discount={currentDiscount}
+  fetchDiscounts={fetchDiscounts}
+  products={products}
+/>
     </Container>
   );
 }

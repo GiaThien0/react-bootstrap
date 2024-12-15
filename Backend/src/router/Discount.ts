@@ -20,6 +20,5 @@ router.put('/updateDiscount/:id', upload.single('image'), DiscountController.upd
 router.delete('/deleteDiscount/:id', DiscountController.deleteDiscount);
 
 // Gán giảm giá cho sản phẩm
-router.put('/product/:id/discount', DiscountController.assignDiscountToProduct);
-
+router.put('/assignDiscountToProduct/:discountId/discount', DiscountController.assignDiscountToProduct);
 export default router;
